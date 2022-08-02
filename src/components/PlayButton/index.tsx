@@ -19,7 +19,7 @@ export function PlayButton(){
 
   async function setupPlayer(){
     try{
-      await TrackPlayer.setupPlayer();
+      await TrackPlayer.setupPlayer({});
       await TrackPlayer.add({url: urlRadio});
     }catch(e){
       console.log(e);
@@ -28,15 +28,16 @@ export function PlayButton(){
 
   async function togglePlayback(playbackState){
     const currentTrack = await TrackPlayer.getCurrentTrack();
+    
     if(currentTrack !== null){
-      if(playbackState === State.Paused || playbackState === 'ready'){
+      if( playbackState === State.Paused || 
+          playbackState === State.Ready
+        ){
         setLoading(true);
-        console.log("play");
         await TrackPlayer.play();
         setLoading(false);
       }else{
         await TrackPlayer.pause();
-        console.log("pause");
       }
     }
   }
