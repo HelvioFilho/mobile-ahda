@@ -4,7 +4,13 @@ export default {
     text_mid: '#3E3E3E',
     text_light: '#CFCFCF',
 
-    background: '#FFFFFF',
+    light: '#FFFFFF',
+    dark: '#000000',
+
+    tabBarColor: {
+      active:'#E32F45',
+      shadow: '#7F5DF0',
+    },
 
     neutral: '#4B92D4',
 
