@@ -3,9 +3,12 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import { EnvelopeSimple, House, MagnifyingGlass, Play, Gear } from 'phosphor-react-native';
 import { Home } from '../screens/Home';
+import { PlayButton } from '../components/PlayButton';
+import { useTheme } from 'styled-components';
 
 export function BottomRoute(){
   const { Navigator, Screen } = createBottomTabNavigator();
+  const theme = useTheme();
 
   return (
     <Navigator
@@ -18,7 +21,7 @@ export function BottomRoute(){
           height: 70,
           borderTopStartRadius: 15,
           borderTopEndRadius: 15,
-          shadowColor: '#7F5DF0',
+          shadowColor: theme.colors.tabBarColor.shadow,
           shadowOffset: { width: 0, height: 10},
           shadowOpacity: 0.25,
           shadowRadius: 3.5,
@@ -27,8 +30,8 @@ export function BottomRoute(){
           paddingBottom: 10,
         },
 
-        tabBarActiveTintColor: 'red',
-        tabBarInactiveTintColor: 'black',
+        tabBarActiveTintColor: theme.colors.tabBarColor.active,
+        tabBarInactiveTintColor: theme.colors.dark,
         tabBarLabelStyle: {
           fontSize: 12,
         }
@@ -48,8 +51,8 @@ export function BottomRoute(){
         name="Busca"
         component={Home}
         options={{
-          tabBarIcon: ({ focused, color}) => (
-            <MagnifyingGlass size={30} color={color} weight={focused ? 'fill' : 'regular'} />
+          tabBarIcon: ({color}) => (
+            <MagnifyingGlass size={30} color={color} weight='regular' />
           )
         }}
       />
@@ -57,8 +60,9 @@ export function BottomRoute(){
         name="Play"
         component={Home}
         options={{
-          tabBarIcon: ({ focused, color}) => (
-            <Play size={32} color={color} weight={focused ? 'fill' : 'regular'} />
+          tabBarLabel: '',
+          tabBarButton: () => (
+            <PlayButton />
           )
         }}
       />
@@ -66,8 +70,8 @@ export function BottomRoute(){
         name="Mensagem"
         component={Home}
         options={{
-          tabBarIcon: ({ focused, color}) => (
-            <EnvelopeSimple size={32} color={color} weight={focused ? 'fill' : 'regular'} />
+          tabBarIcon: ({ color}) => (
+            <EnvelopeSimple size={32} color={color} weight='regular' />
           )
         }}
       />
