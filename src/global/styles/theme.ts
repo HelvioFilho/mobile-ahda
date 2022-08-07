@@ -16,7 +16,7 @@ export default {
 
     success: '#4DCFC0',
     warning: '#EEA63A',
-    error: '#e52b67',
+    error: '#E83F5B',
   },
   
   fonts: {
