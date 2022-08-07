@@ -1,28 +1,40 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import { EnvelopeSimple, House, MagnifyingGlass, Play, Gear } from 'phosphor-react-native';
+import { EnvelopeSimple, House, MagnifyingGlass, Gear } from 'phosphor-react-native';
 import { Home } from '../screens/Home';
 import { PlayButton } from '../components/PlayButton';
 import { useTheme } from 'styled-components';
+import { Search } from '../screens/Search';
+import { Message } from '../screens/Message';
+import { Settings } from '../screens/Settings';
+import { Keyboard } from 'react-native';
 
-export function BottomRoute(){
+export function BottomRoute() {
   const { Navigator, Screen } = createBottomTabNavigator();
   const theme = useTheme();
+  const [showKeyboard, setShowKeyboard] = useState(undefined);
+
+  useEffect(() => {
+    Keyboard.addListener("keyboardDidHide", () => {
+      setShowKeyboard(false);
+    });
+    Keyboard.addListener("keyboardDidShow", () => {
+      setShowKeyboard(true);
+    });
+  }, []);
 
   return (
     <Navigator
       screenOptions={{
         headerShown: false,
-
         tabBarStyle: {
           borderTopColor: 'transparent',
-          position: 'relative',
           height: 70,
           borderTopStartRadius: 15,
           borderTopEndRadius: 15,
           shadowColor: theme.colors.tabBarColor.shadow,
-          shadowOffset: { width: 0, height: 10},
+          shadowOffset: { width: 0, height: 10 },
           shadowOpacity: 0.25,
           shadowRadius: 3.5,
           elevation: 5,
@@ -37,49 +49,51 @@ export function BottomRoute(){
         }
       }}
     >
-      <Screen 
+      <Screen
         name="Home"
         component={Home}
         options={{
-          tabBarIcon: ({ focused, color}) => (
+          tabBarIcon: ({ focused, color }) => (
             <House size={33} color={color} weight={focused ? 'fill' : 'regular'} />
           )
         }}
       />
 
-      <Screen 
+      <Screen
         name="Busca"
-        component={Home}
+        component={Search}
         options={{
-          tabBarIcon: ({color}) => (
+          tabBarIcon: ({ color }) => (
             <MagnifyingGlass size={30} color={color} weight='regular' />
           )
         }}
       />
-      <Screen 
+      <Screen
         name="Play"
-        component={Home}
+        component={PlayButton}
         options={{
           tabBarLabel: '',
           tabBarButton: () => (
-            <PlayButton />
+            showKeyboard ? null : <PlayButton />
           )
         }}
       />
-      <Screen 
+      <Screen
         name="Mensagem"
-        component={Home}
+        component={Message}
         options={{
-          tabBarIcon: ({ color}) => (
+          tabBarIcon: ({ color }) => (
             <EnvelopeSimple size={32} color={color} weight='regular' />
-          )
+          ),
+          // tabBarHideOnKeyboard: true,
+          tabBarHideOnKeyboard: true,
         }}
       />
-      <Screen 
+      <Screen
         name="Opções"
-        component={Home}
+        component={Settings}
         options={{
-          tabBarIcon: ({ focused, color}) => (
+          tabBarIcon: ({ focused, color }) => (
             <Gear size={32} color={color} weight={focused ? 'fill' : 'regular'} />
           )
         }}
