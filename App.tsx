@@ -1,4 +1,5 @@
-import { StatusBar } from 'expo-status-bar';
+import 'intl';
+import 'intl/locale-data/jsonp/pt-BR';
 import React from 'react';
 import { SafeAreaView } from 'react-native';
 
