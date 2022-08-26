@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, View, Text } from 'react-native';
 import { Load } from '../../components/Load';
 import { PostList } from '../../components/PostList';
 import { api } from '../../services/api';
 
-import { Container } from './styles';
+import { Container, ContainerWarn, TextWarn } from './styles';
+
+const { KEY } = process.env;
 
 export interface postProps {
   id: string;
-  titulo: string;
-  previa: string;
-  data: string;
+  title: string;
+  preview: string;
+  date_post: string;
   user: string;
-  capa: string;
+  cover: string;
 }
 
 export function Home() {
@@ -22,14 +24,16 @@ export function Home() {
   const [post, setPost] = useState<postProps[]>([]);
   const size = 4;
 
-  async function getNotice() {
+  async function getPosts() {
     try {
-      const { data } = await api.get(`get_post?page=${page}&size${size}`);
+      const { data } = await api.get(`get_post?page=${page}&size=${size}&key=${KEY}`);
       if (page > 1) {
-        setPost(oldValue => [...oldValue, ...data]);
+        setPost(oldValue => [...oldValue, ...data.data]);
       } else {
-        setPost(data);
+        setPost(data.data);
       }
+      setTotalPage(data.count);
+      
     } catch (e) {
       console.log(e);
     } finally {
@@ -47,7 +51,7 @@ export function Home() {
   }
 
   useEffect(() => {
-    getNotice();
+    getPosts();
   }, []);
 
   return (
@@ -55,15 +59,20 @@ export function Home() {
       {
         loading ?
           <Load size={32} /> :
-          <FlatList
-            data={post}
-            keyExtractor={item => item.id}
-            renderItem={({ item }) => {
-              return (
-                <PostList data={item} />
-              )
-            }}
-          />
+          post.length > 0 ?
+            <FlatList
+              data={post}
+              keyExtractor={item => item.id}
+              renderItem={({ item }) => {
+                return (
+                  <PostList data={item} />
+                )
+              }}
+            />
+            :
+            <ContainerWarn>
+              <TextWarn>Ainda não há publicações.</TextWarn>
+            </ContainerWarn>
       }
     </Container>
   );

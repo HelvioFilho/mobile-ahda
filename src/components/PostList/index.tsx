@@ -21,23 +21,23 @@ export function PostList({ data }: PostListProps) {
   const [newHour, setNewHour] = useState('');
 
   useEffect(() => {
-    const date = data.data.replace(' ', 'T');
-    setNewDate(Intl.DateTimeFormat('pt-BR', { dateStyle: 'long' }).format(new window.Date(date)));
-    setNewHour(Intl.DateTimeFormat('pt-BR', { timeStyle: 'short' }).format(new window.Date(date)));
+    const date = data.date_post.split(' ');
+    setNewDate(date[0]);
+    setNewHour(date[1]);
   }, []);
 
   return (
     <Container>
-      <Title>{data.titulo}</Title>
+      <Title>{data.title}</Title>
       <Cover
-        source={{ uri: data.capa }}
+        source={{ uri: data.cover }}
         resizeMethod='resize'
-        resizeMode='cover'
+        resizeMode='stretch'
       />
       <ContainerUser>
         <User>Por: {data.user}</User>
       </ContainerUser>
-      <Preview>{data.previa}</Preview>
+      <Preview>{data.preview}</Preview>
       <Separator />
       <Date>publicado em: {newDate} às {newHour}</Date>
     </Container>
