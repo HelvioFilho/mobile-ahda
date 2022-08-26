@@ -20,6 +20,9 @@ export default {
   },
   
   fonts: {
-
+    latoThin: 'Lato_100Thin',
+    latoLight: 'Lato_300Light',
+    latoRegular: 'Lato_400Regular',
+    latoBold: 'Lato_700Bold'
   },
 }
