@@ -21,18 +21,18 @@ export const MessageImage = styled(Image)`
 
 export const Title = styled.Text`
   font-family: ${({theme}) => theme.fonts.latoBold};
-  font-size: ${RFValue(24)}px;
+  font-size: ${RFValue(20)}px;
   text-align: center;
   margin-top: 20px;
 `;
 
 export const SubTitle = styled.Text`
-  font-size: ${RFValue(16)}px;
-  margin: 6px 18px;
+  font-size: ${RFValue(14)}px;
+  margin: 10px 18px;
 `;
 
 export const ContainerForm = styled.View`
-  margin-top: 40px;
+  margin-top: 20px;
   padding: 0 25px;
 `;
 
@@ -48,6 +48,6 @@ export const ContainerButton = styled(TouchableOpacity)`
 `;
 
 export const ButtonText = styled.Text`
-  font-size: ${RFValue(16)}px;
+  font-size: ${RFValue(18)}px;
   color: ${({ theme }) => theme.colors.light};
 `;
