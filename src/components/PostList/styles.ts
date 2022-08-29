@@ -11,7 +11,7 @@ export const Container = styled.View`
 `;
 
 export const Title = styled.Text`
-  font-size: ${RFValue(22)}px;
+  font-size: ${RFValue(20)}px;
   margin-bottom: 8px;
   text-align: center;
   font-weight: bold;
@@ -33,7 +33,7 @@ export const Date = styled.Text`
   text-align: center;
 `;
 export const User = styled.Text`
-  font-size: ${RFValue(13)}px;
+  font-size: ${RFValue(10)}px;
   font-weight: bold;
   color: ${({ theme }) => theme.colors.light};
   padding: 8px 4px;
