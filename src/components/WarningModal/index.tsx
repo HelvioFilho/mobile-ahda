@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTheme } from 'styled-components';
+import theme from '../../global/styles/theme';
 
 import { 
   Container, 
@@ -17,6 +18,7 @@ interface WarningModalProps {
   title?: string;
   message: string;
   height?: number;
+  colorButton: string;
   closeModal: () => void;
 }
 
@@ -25,6 +27,7 @@ export function WarningModal(
     title,
     message,
     height = 200,
+    colorButton,
     closeModal
   }: WarningModalProps) {
   
@@ -37,9 +40,9 @@ export function WarningModal(
           onPress={closeModal}
         >
           <IconX 
-            name="md-close-circle-outline"
+            name="md-close-circle"
             size={30}
-            color={theme.colors.dark}
+            color={theme.colors.error}
           />
         </Close>
         {
@@ -54,12 +57,12 @@ export function WarningModal(
         <Footer>
           <Button 
             onPress={closeModal}
+            color={colorButton}
           >
             <Title>Fechar</Title>
           </Button>
         </Footer>
       </ContainerModal>
-
     </Container>
   );
 }
