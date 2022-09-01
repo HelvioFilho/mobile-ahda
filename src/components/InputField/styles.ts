@@ -1,3 +1,4 @@
+import { RFValue } from 'react-native-responsive-fontsize';
 import { TextInput } from 'react-native';
 import styled from 'styled-components/native';
 
@@ -6,12 +7,11 @@ interface InputContainerProps {
 }
 
 export const Container = styled.View`
-  
   margin-bottom: 17px;
 `;
 
 export const Label = styled.Text`
-  font-size: 18px;
+  font-size: ${RFValue(16)}px;
   font-weight: 500;
   color: ${({theme}) => theme.colors.text};
   margin-bottom: 7px;
@@ -20,14 +20,14 @@ export const Label = styled.Text`
 export const Field = styled(TextInput)`
   flex: 1;
   height: 100%;
-  font-size: 18px;
+  font-size: ${RFValue(14)}px;
   color: #3D434D;
 `;
 
 export const Error = styled.Text`
   color: #E83F5B;
   margin-bottom: 4px;
-  font-size: 16px;
+  font-size: ${RFValue(14)}px;
 `;
 
 export const InputContainer = styled.View<InputContainerProps>`
