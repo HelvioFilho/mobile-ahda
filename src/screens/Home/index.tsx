@@ -27,13 +27,18 @@ export function Home() {
   async function getPosts() {
     try {
       const { data } = await api.get(`get_post?page=${page}&size=${size}&key=${KEY}`);
-      if (page > 1) {
-        setPost(oldValue => [...oldValue, ...data.data]);
+
+      if (!data.error) {
+        if (page > 1) {
+          setPost(oldValue => [...oldValue, ...data.data]);
+        } else {
+          setPost(data.data);
+        }
+        setTotalPage(data.count);
       } else {
-        setPost(data.data);
+        console.log(data.error);
       }
-      setTotalPage(data.count);
-      
+
     } catch (e) {
       console.log(e);
     } finally {
