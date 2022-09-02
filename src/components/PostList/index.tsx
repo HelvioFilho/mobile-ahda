@@ -1,24 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { postProps } from '../../screens/Home';
+import { PostProps } from '../../screens/Home';
+import { postStore } from '../../services/store';
+import { useNavigation } from '@react-navigation/native';
 
 import {
-  Container,
-  Cover,
-  Title,
-  Preview,
-  User,
-  Date,
-  ContainerUser,
-  Separator,
+  Container, ContainerUser, Cover, Date, Preview, Separator, Title, User
 } from './styles';
 
 interface PostListProps {
-  data: postProps;
+  data: PostProps;
 }
 
 export function PostList({ data }: PostListProps) {
   const [newDate, setNewDate] = useState('');
   const [newHour, setNewHour] = useState('');
+
+  const { setData } = postStore();
+  const { navigate } = useNavigation();
+  
+  function handleSelectPost() {
+    setData(data);
+    navigate('Post');
+  }
 
   useEffect(() => {
     const date = data.date_post.split(' ');
@@ -27,7 +30,10 @@ export function PostList({ data }: PostListProps) {
   }, []);
 
   return (
-    <Container>
+    <Container
+      activeOpacity={0.9}
+      onPress={handleSelectPost}
+    >
       <Title>{data.title}</Title>
       <Cover
         source={{ uri: data.cover }}
