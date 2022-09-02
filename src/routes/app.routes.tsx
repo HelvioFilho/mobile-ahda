@@ -1,14 +1,35 @@
-import React, { useEffect, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import React, { useEffect, useState } from 'react';
 
-import { EnvelopeSimple, House, MagnifyingGlass, Gear } from 'phosphor-react-native';
-import { Home } from '../screens/Home';
-import { PlayButton } from '../components/PlayButton';
-import { useTheme } from 'styled-components';
-import { Search } from '../screens/Search';
-import { Message } from '../screens/Message';
-import { Settings } from '../screens/Settings';
+import { createStackNavigator } from '@react-navigation/stack';
+import { EnvelopeSimple, Gear, House, MagnifyingGlass } from 'phosphor-react-native';
 import { Keyboard } from 'react-native';
+import { useTheme } from 'styled-components';
+import { PlayButton } from '../components/PlayButton';
+import { Home } from '../screens/Home';
+import { Message } from '../screens/Message';
+import { Post } from '../screens/Post';
+import { Search } from '../screens/Search';
+import { Settings } from '../screens/Settings';
+
+function Stack(){
+  const { Navigator, Screen} = createStackNavigator();
+
+  return (
+    <Navigator
+      screenOptions={{headerShown: false}}
+    >
+      <Screen 
+        name="HomeAndPost"
+        component={Home}
+      />
+      <Screen 
+        name="Post"
+        component={Post}
+      />
+    </Navigator>
+  );
+}
 
 export function BottomRoute() {
   const { Navigator, Screen } = createBottomTabNavigator();
@@ -51,7 +72,7 @@ export function BottomRoute() {
     >
       <Screen
         name="Home"
-        component={Home}
+        component={Stack}
         options={{
           tabBarIcon: ({ focused, color }) => (
             <House size={33} color={color} weight={focused ? 'fill' : 'regular'} />
