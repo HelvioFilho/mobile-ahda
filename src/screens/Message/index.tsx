@@ -7,6 +7,7 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
+  Modal,
 } from 'react-native';
 
 import SendRight from '../../assets/send-right.png';
@@ -23,6 +24,18 @@ import {
   MessageImage
 } from './styles';
 import { InputField } from '../../components/InputField';
+import { api } from '../../services/api';
+import { WarningModal } from '../../components/WarningModal';
+import { useTheme } from 'styled-components';
+import theme from '../../global/styles/theme';
+
+const { KEY } = process.env;
+
+interface WarningProps {
+  message: string;
+  height: number;
+  color: string;
+}
 
 export function Message() {
 
@@ -33,6 +46,10 @@ export function Message() {
   }
 
   const [inputHeight, setInputHeight] = useState(50);
+  const [visible, setVisible] = useState(false);
+  const [warning, setWarning] = useState<WarningProps>({} as WarningProps);
+
+  const theme = useTheme();
 
   const schema = Yup.object().shape({
     message: Yup
@@ -75,9 +92,40 @@ export function Message() {
               validationSchema={schema}
               onSubmit={
                 (values, formikActions) => {
-                  console.log(values);
-                  formikActions.resetForm();
-                  formikActions.setSubmitting(false);
+
+                  api.post('set_message', {
+                    name: values.name,
+                    email: values.email,
+                    message: values.message,
+                    key: KEY,
+                  }).then(({ data }) => {
+                    let message, height = 170;
+                    if (data.error) {
+                      if (data.message) {
+                        message = data.message ?
+                          data.message :
+                          'Algo deu errado e sua mensagem não pode ser enviada, por favor tente novamente mais tarde';
+                        height = 210;
+                      }
+                    } else {
+                      message = 'Mensagem enviada com sucesso!';
+                      formikActions.resetForm();
+                    }
+                    setWarning({
+                      height,
+                      message,
+                      color: theme.colors.error
+                    });
+                  }).catch((e) => {
+                    setWarning({
+                      height: 210,
+                      message: 'Algo deu errado e o servidor não respondeu, se o erro persistir, entre em contato com o desenvolvedor do aplicativo!',
+                      color: theme.colors.error
+                    });
+                  }).finally(() => {
+                    formikActions.setSubmitting(false);
+                    setVisible(true);
+                  });
                 }
               }
             >
@@ -133,6 +181,20 @@ export function Message() {
                 }
               }
             </Formik>
+            <Modal
+              animationType='fade'
+              transparent
+              visible={visible}
+              onRequestClose={() => setVisible(false)}
+            >
+              <WarningModal
+                title='Aviso'
+                height={warning.height}
+                message={warning.message}
+                colorButton={warning.color}
+                closeModal={() => setVisible(false)}
+              />
+            </Modal>
           </Container>
         </ScrollView>
       </TouchableWithoutFeedback>
