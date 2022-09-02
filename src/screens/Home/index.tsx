@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, View, Text } from 'react-native';
+import { FlatList } from 'react-native';
 import { Load } from '../../components/Load';
 import { PostList } from '../../components/PostList';
 import { api } from '../../services/api';
@@ -8,20 +8,21 @@ import { Container, ContainerWarn, TextWarn } from './styles';
 
 const { KEY } = process.env;
 
-export interface postProps {
+export interface PostProps {
   id: string;
   title: string;
+  text: string;
   preview: string;
-  date_post: string;
   user: string;
   cover: string;
+  date_post: string;
 }
 
 export function Home() {
   const [totalPage, setTotalPage] = useState(0);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
-  const [post, setPost] = useState<postProps[]>([]);
+  const [post, setPost] = useState<PostProps[]>([]);
   const size = 4;
 
   async function getPosts() {
