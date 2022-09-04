@@ -13,7 +13,11 @@ export interface PostProps {
   title: string;
   text: string;
   preview: string;
-  user: string;
+  user: {
+    name: string;
+    image: string;
+    about: string; 
+  }
   cover: string;
   date_post: string;
 }
@@ -28,7 +32,7 @@ export function Home() {
   async function getPosts() {
     try {
       const { data } = await api.get(`get_post?page=${page}&size=${size}&key=${KEY}`);
-
+      
       if (!data.error) {
         if (page > 1) {
           setPost(oldValue => [...oldValue, ...data.data]);
