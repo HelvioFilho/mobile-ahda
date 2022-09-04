@@ -13,6 +13,7 @@ import { Button, Container } from './styles';
 export function PlayButton(){
   const urlRadio = "https://s18.maxcast.com.br:8707/live";
   const [loading, setLoading] = useState(false);
+  const [isPlayerOn, setIsPlayerOn] = useState(false);
 
   const playbackState = usePlaybackState();
   const theme = useTheme();
@@ -21,6 +22,7 @@ export function PlayButton(){
     try{
       await TrackPlayer.setupPlayer({});
       await TrackPlayer.add({url: urlRadio});
+      setIsPlayerOn(true);
     }catch(e){
       console.log(e);
     }
@@ -43,7 +45,9 @@ export function PlayButton(){
   }
 
   useEffect(() => {
-    setupPlayer();
+    if(!isPlayerOn){
+      setupPlayer();
+    }
   },[]);
 
   return (
