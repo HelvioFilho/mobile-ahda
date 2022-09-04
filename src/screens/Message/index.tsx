@@ -1,33 +1,24 @@
-import React, { useState } from 'react';
-import * as Yup from 'yup';
 import { Formik } from 'formik';
+import React, { useState } from 'react';
 import {
-  KeyboardAvoidingView,
-  Platform,
+  Keyboard, KeyboardAvoidingView, Modal, Platform,
   ScrollView,
-  TouchableWithoutFeedback,
-  Keyboard,
-  Modal,
+  TouchableWithoutFeedback
 } from 'react-native';
+import * as Yup from 'yup';
 
-import SendRight from '../../assets/send-right.png';
 import SendLeft from '../../assets/send-left.png';
+import SendRight from '../../assets/send-right.png';
 
-import {
-  Container,
-  SubTitle,
-  Title,
-  ContainerForm,
-  ContainerButton,
-  ButtonText,
-  ContainerImage,
-  MessageImage
-} from './styles';
-import { InputField } from '../../components/InputField';
-import { api } from '../../services/api';
-import { WarningModal } from '../../components/WarningModal';
 import { useTheme } from 'styled-components';
-import theme from '../../global/styles/theme';
+import { InputField } from '../../components/InputField';
+import { WarningModal } from '../../components/WarningModal';
+import { api } from '../../services/api';
+import {
+  ButtonText, Container, ContainerButton, ContainerForm, ContainerImage,
+  MessageImage, SubTitle,
+  Title
+} from './styles';
 
 const { KEY } = process.env;
 
