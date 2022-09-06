@@ -79,10 +79,24 @@ export const AboutWrapper = styled.View`
   margin: 0 10px 20px;
   padding: 10px 15px;
   border-radius: 10px;
-  background-color: ${({ theme}) => theme.colors.light };
+  background-color: ${({ theme }) => theme.colors.light};
 
 `;
 
 export const About = styled.Text`
   font-size: ${RFValue(14)}px;  
+`;
+
+export const BackButton = styled.TouchableOpacity`
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  top: ${RFValue(60)}px;
+  left: ${RFValue(15)}px;
+  width: ${RFValue(30)}px;
+  height: ${RFValue(30)}px;
+  border-radius: ${RFValue(15)}px;
+  border-width: 1px;
+  border-color: ${({ theme }) => theme.colors.light};
+  background-color: ${({ theme }) => theme.colors.tabBarColor.active};
 `;

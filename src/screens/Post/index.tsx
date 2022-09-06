@@ -4,17 +4,20 @@ import {
   StatusBar,
   useWindowDimensions
 } from 'react-native';
+import { CaretLeft } from 'phosphor-react-native';
 import RenderHTML from 'react-native-render-html';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { useTheme } from 'styled-components';
 import { ImageGallery } from '../../components/ImageGallery';
 import { api } from '../../services/api';
 import { postStore } from '../../services/store';
+import { useNavigation } from '@react-navigation/native';
 
 import {
   About,
   AboutWrapper,
   Avatar,
+  BackButton,
   Container,
   ContainerAvatar,
   ContainerGallery,
@@ -40,6 +43,7 @@ export function Post() {
   const { data } = postStore();
   const { width } = useWindowDimensions();
   const theme = useTheme();
+  const { goBack } = useNavigation();
 
   const date = data.date_post.split(' ');
   const day = date[0];
@@ -124,23 +128,23 @@ export function Post() {
 
   return (
     <>
-      <StatusBar
-        backgroundColor={statusBar ? theme.colors.light : 'transparent'}
-        barStyle={statusBar ? 'dark-content' : 'light-content'}
-        translucent
-      />
-
       <ScrollView
-        style={{ backgroundColor: theme.colors.light }}
+        style={{ flex: 1, backgroundColor: theme.colors.light }}
         onScroll={(event) => handleScroll(event)}
         scrollEventThrottle={16}
       >
+        <StatusBar
+          backgroundColor={statusBar ? theme.colors.light : 'transparent'}
+          barStyle={statusBar ? 'dark-content' : 'light-content'}
+          translucent
+        />
         <CoverWrapper>
           <Cover
             source={{ uri: data.cover }}
             resizeMode='stretch'
             resizeMethod='scale'
           />
+
         </CoverWrapper>
         <Container>
           <Title>{data.title}</Title>
@@ -177,6 +181,15 @@ export function Post() {
           </Footer>
         </Container>
       </ScrollView>
+      <BackButton
+        activeOpacity={0.8}
+        onPress={goBack}
+      >
+        <CaretLeft
+          size={20}
+          color={theme.colors.light}
+        />
+      </BackButton>
     </>
   );
 }
