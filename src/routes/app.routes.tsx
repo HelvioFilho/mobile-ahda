@@ -12,7 +12,7 @@ import { Post } from '../screens/Post';
 import { Search } from '../screens/Search';
 import { Settings } from '../screens/Settings';
 
-function Stack(){
+function HomeScreen(){
   const { Navigator, Screen} = createStackNavigator();
 
   return (
@@ -22,6 +22,29 @@ function Stack(){
       <Screen 
         name="HomeAndPost"
         component={Home}
+      />
+      <Screen 
+        name="SearchAndPost"
+        component={Search}
+      />
+      <Screen 
+        name="Post"
+        component={Post}
+      />
+    </Navigator>
+  );
+}
+
+function SearchScreen(){
+  const { Navigator, Screen} = createStackNavigator();
+
+  return (
+    <Navigator
+      screenOptions={{headerShown: false}}
+    >
+      <Screen 
+        name="SearchAndPost"
+        component={Search}
       />
       <Screen 
         name="Post"
@@ -52,13 +75,6 @@ export function BottomRoute() {
         tabBarStyle: {
           borderTopColor: 'transparent',
           height: 70,
-          borderTopStartRadius: 15,
-          borderTopEndRadius: 15,
-          shadowColor: theme.colors.tabBarColor.shadow,
-          shadowOffset: { width: 0, height: 10 },
-          shadowOpacity: 0.25,
-          shadowRadius: 3.5,
-          elevation: 5,
           paddingTop: 5,
           paddingBottom: 10,
         },
@@ -72,7 +88,7 @@ export function BottomRoute() {
     >
       <Screen
         name="Home"
-        component={Stack}
+        component={HomeScreen}
         options={{
           tabBarIcon: ({ focused, color }) => (
             <House size={33} color={color} weight={focused ? 'fill' : 'regular'} />
@@ -82,7 +98,7 @@ export function BottomRoute() {
 
       <Screen
         name="Busca"
-        component={Search}
+        component={SearchScreen}
         options={{
           tabBarIcon: ({ color }) => (
             <MagnifyingGlass size={30} color={color} weight='regular' />
@@ -106,7 +122,6 @@ export function BottomRoute() {
           tabBarIcon: ({ color }) => (
             <EnvelopeSimple size={32} color={color} weight='regular' />
           ),
-          // tabBarHideOnKeyboard: true,
           tabBarHideOnKeyboard: true,
         }}
       />
