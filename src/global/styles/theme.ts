@@ -7,6 +7,8 @@ export default {
     light: '#FFFFFF',
     dark: '#000000',
 
+    background: '#f1f1f1',
+
     tabBarColor: {
       active:'#E32F45',
       shadow: '#7F5DF0',
