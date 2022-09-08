@@ -102,7 +102,8 @@ export function BottomRoute() {
         options={{
           tabBarIcon: ({ color }) => (
             <MagnifyingGlass size={30} color={color} weight='regular' />
-          )
+          ),
+          tabBarHideOnKeyboard: true,
         }}
       />
       <Screen
