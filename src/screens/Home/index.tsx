@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, RefreshControl } from 'react-native';
+import { useTheme } from 'styled-components';
 import { Load } from '../../components/Load';
 import { PostList } from '../../components/PostList';
 import { api } from '../../services/api';
@@ -16,45 +17,71 @@ export interface PostProps {
   user: {
     name: string;
     image: string;
-    about: string; 
+    about: string;
   }
   cover: string;
   date_post: string;
 }
 
+interface UpdatePostProps {
+  data: PostProps[];
+  count: number;
+  isUpdated: boolean;
+}
+
 export function Home() {
-  const [totalPage, setTotalPage] = useState(0);
+  const [totalPage, setTotalPage] = useState(1);
   const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(true);
+  const [startLoading, setStartLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [post, setPost] = useState<PostProps[]>([]);
+  const [update, setUpdate] = useState<UpdatePostProps>({} as UpdatePostProps);
   const size = 4;
 
-  async function getPosts() {
-    try {
-      const { data } = await api.get(`get_post?page=${page}&size=${size}&key=${KEY}`);
-      
-      if (!data.error) {
-        if (page > 1) {
-          setPost(oldValue => [...oldValue, ...data.data]);
-        } else {
-          setPost(data.data);
-        }
-        setTotalPage(data.count);
-      } else {
-        console.log(data.error);
-      }
+  const theme = useTheme();
 
-    } catch (e) {
-      console.log(e);
-    } finally {
-      setLoading(false);
+  async function getPosts() {
+    if (page <= totalPage && Object.keys(update).length === 0) {
+      try {
+        setLoading(true);
+        const { data } = await api.get(`get_post?page=${page}&size=${size}&key=${KEY}`);
+
+        if (!data.error) {
+          if (page > 1) {
+            setPost(oldValue => [...oldValue, ...data.data]);
+          } else {
+            setPost(data.data);
+          }
+          setTotalPage(data.count);
+        } else {
+          console.log(data.error);
+        }
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setStartLoading(false);
+        setLoading(false);
+      }
+    }else if(Object.keys(update).length > 0){
+      setPost(update.data);
+      setTotalPage(update.count);
+      setUpdate({} as UpdatePostProps);
     }
   }
 
-  async function getTotalPages() {
+  async function checkNewPosts() {
     try {
-      const { data } = await api.get(`count_post`);
-      setTotalPage(data.total_post);
+      const oldPost = post.length > 4 ? post.slice(0, 4) : post;
+      const { data } = await api.get(`get_post?page=1&size=${size}&key=${KEY}`);
+      
+      if (JSON.stringify(oldPost) !== JSON.stringify(data.data)) {
+        setUpdate(data);
+        if(page === 1){
+          getPosts();
+        }else{
+          setPage(1);
+        }
+      }
     } catch (e) {
       console.log(e);
     }
@@ -62,13 +89,13 @@ export function Home() {
 
   useEffect(() => {
     getPosts();
-  }, []);
+  }, [page]);
 
   return (
     <Container>
       {
-        loading ?
-          <Load size={32} /> :
+        startLoading ?
+          <Load size={50} /> :
           post.length > 0 ?
             <FlatList
               data={post}
@@ -78,6 +105,27 @@ export function Home() {
                   <PostList data={item} />
                 )
               }}
+              refreshControl={
+                <RefreshControl
+                  refreshing={loading}
+                  onRefresh={checkNewPosts}
+                  tintColor={theme.colors.tabBarColor.active}
+                  colors={[theme.colors.tabBarColor.active]}
+                />
+              }
+              onEndReached={() => {
+                if(page < totalPage){
+                  if(!loading){
+                    setPage(oldValue => (oldValue + 1))
+                  }
+                }
+              }}
+              onEndReachedThreshold={0.1}
+              ListFooterComponent={
+                loading ?
+                  <Load size={32} />
+                  : <></>
+              }
             />
             :
             <ContainerWarn>

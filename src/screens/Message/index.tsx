@@ -1,11 +1,14 @@
-import { Formik } from 'formik';
 import React, { useState } from 'react';
 import {
-  Keyboard, KeyboardAvoidingView, Modal, Platform,
+  Keyboard, 
+  KeyboardAvoidingView, 
+  Modal, 
+  Platform,
   ScrollView,
   TouchableWithoutFeedback
 } from 'react-native';
 import * as Yup from 'yup';
+import { Formik } from 'formik';
 
 import SendLeft from '../../assets/send-left.png';
 import SendRight from '../../assets/send-right.png';
@@ -15,8 +18,13 @@ import { InputField } from '../../components/InputField';
 import { WarningModal } from '../../components/WarningModal';
 import { api } from '../../services/api';
 import {
-  ButtonText, Container, ContainerButton, ContainerForm, ContainerImage,
-  MessageImage, SubTitle,
+  ButtonText,
+  Container,
+  ContainerButton,
+  ContainerForm,
+  ContainerImage,
+  MessageImage,
+  SubTitle,
   Title
 } from './styles';
 
