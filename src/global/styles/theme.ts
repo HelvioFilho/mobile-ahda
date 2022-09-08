@@ -7,10 +7,11 @@ export default {
     light: '#FFFFFF',
     dark: '#000000',
 
-    background: '#f1f1f1',
+    background: '#F1F1F1',
 
     tabBarColor: {
       active:'#E32F45',
+      player: '#FFFFFF',
       shadow: '#7F5DF0',
     },
 
