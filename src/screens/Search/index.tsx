@@ -3,21 +3,21 @@ import {
   FlatList,
   Keyboard,
   KeyboardAvoidingView,
-  Platform,
-  TouchableWithoutFeedback
+  Platform, TouchableWithoutFeedback
 } from 'react-native';
 
 import { useTheme } from 'styled-components';
 import * as Yup from 'yup';
 
+import { Formik } from 'formik';
+import { MagnifyingGlass } from 'phosphor-react-native';
 import { Load } from '../../components/Load';
 import { PostList } from '../../components/PostList';
-import { MagnifyingGlass } from 'phosphor-react-native';
-import { Formik } from 'formik';
 import { PostProps } from '../Home';
 
 import { InputField } from '../../components/InputField';
 import { api } from '../../services/api';
+import { ContainerWarning, TextWarning } from '../Settings/styles';
 import { Container, ContainerForm, SearchButton } from './styles';
 
 const { KEY } = process.env;
@@ -28,6 +28,7 @@ export function Search() {
   const [loading, setLoading] = useState(false);
   const [post, setPost] = useState<PostProps[]>([]);
   const [searchValue, setSearchValue] = useState('');
+  const [isEmpty, setIsEmpty] = useState(false);
 
   const size = 2;
   const values = {
@@ -46,6 +47,7 @@ export function Search() {
 
   async function getPosts(search: string, setPage: number) {
     try {
+      Keyboard.dismiss();
       setLoading(true);
       const { data } = await api.get(`search?search=${search}&page=${setPage}&size=${size}&key=${KEY}`);
 
@@ -53,6 +55,7 @@ export function Search() {
         if (setPage > 1) {
           setPost(oldValue => [...oldValue, ...data.data]);
         } else {
+          if(data.data.length === 0) setIsEmpty(true);
           setPost(data.data);
         }
         setTotalPage(data.count);
@@ -68,7 +71,7 @@ export function Search() {
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1}}
+      style={{ flex: 1 }}
       behavior={Platform.OS === 'ios' ? 'padding' : null}
       enabled
     >
@@ -80,6 +83,7 @@ export function Search() {
             onSubmit={
               (values, formikActions) => {
                 const formPage = page > 1 ? 1 : page;
+                setIsEmpty(false);
                 setPage(formPage);
                 setSearchValue(values.search);
                 getPosts(values.search, formPage);
@@ -144,6 +148,16 @@ export function Search() {
               loading ?
                 <Load size={32} />
                 : <></>
+            }
+            ListEmptyComponent={
+              isEmpty &&
+              <ContainerWarning>
+                <TextWarning>
+                  Nenhuma publicação corresponde a pesquisa,
+                  verifique a ortografia ou tente uma combinação
+                  de palavras diferentes!
+                </TextWarning>
+              </ContainerWarning>
             }
           />
         </Container>
