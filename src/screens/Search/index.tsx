@@ -17,8 +17,13 @@ import { PostProps } from '../Home';
 
 import { InputField } from '../../components/InputField';
 import { api } from '../../services/api';
-import { ContainerWarning, TextWarning } from '../Settings/styles';
-import { Container, ContainerForm, SearchButton } from './styles';
+import {
+  Container,
+  ContainerForm,
+  SearchButton,
+  ContainerWarning,
+  TextWarning
+} from './styles';
 
 const { KEY } = process.env;
 
@@ -55,7 +60,7 @@ export function Search() {
         if (setPage > 1) {
           setPost(oldValue => [...oldValue, ...data.data]);
         } else {
-          if(data.data.length === 0) setIsEmpty(true);
+          if (data.data.length === 0) setIsEmpty(true);
           setPost(data.data);
         }
         setTotalPage(data.count);
@@ -112,7 +117,6 @@ export function Search() {
                       onBlur={handleBlur('search')}
                       error={touched.search && errors.search}
                       value={search}
-
                     >
                       <SearchButton
                         disabled={isSubmitting}

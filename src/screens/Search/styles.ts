@@ -1,4 +1,5 @@
 import styled from 'styled-components/native';
+import { RFValue } from 'react-native-responsive-fontsize';
 
 export const Container = styled.View`
   flex: 1;
@@ -19,3 +20,11 @@ export const SearchButton = styled.TouchableOpacity`
   border-left-color: ${({ theme }) => theme.colors.background};
   background-color: ${({ theme }) => theme.colors.success};
 `; 
+
+export const ContainerWarning = styled.View`
+  padding: 20px 25px;
+`;
+
+export const TextWarning = styled.Text`
+  font-size: ${RFValue(16)}px;
+`;
