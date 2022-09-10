@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { PostProps } from '../../screens/Home';
-import { postStore } from '../../services/store';
+import { appDataStore } from '../../services/store';
 import { useNavigation } from '@react-navigation/native';
 
 import {
@@ -15,7 +15,7 @@ export function PostList({ data }: PostListProps) {
   const [newDate, setNewDate] = useState('');
   const [newHour, setNewHour] = useState('');
 
-  const { setData } = postStore();
+  const { setData } = appDataStore();
   const { navigate } = useNavigation();
   
   function handleSelectPost() {

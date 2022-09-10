@@ -1,72 +1,72 @@
+import { Play, Stop } from 'phosphor-react-native';
 import React, { useEffect, useState } from 'react';
 import TrackPlayer, {
   Capability,
   State,
-  usePlaybackState,
+  usePlaybackState
 } from 'react-native-track-player';
-import { Play, Stop } from 'phosphor-react-native';
 
 import { useTheme } from 'styled-components';
 
+import { appDataStore } from '../../services/store';
 import { Load } from '../Load';
 import { Button, Container } from './styles';
-import { postStore } from '../../services/store';
 
-export function PlayButton(){
+export function PlayButton() {
   const urlRadio = "https://s18.maxcast.com.br:8707/live";
   const [loading, setLoading] = useState(false);
 
   const playbackState = usePlaybackState();
   const theme = useTheme();
-  const {statusPlayer, setStatusPlayer } = postStore();
+  const { statusPlayer, setStatusPlayer } = appDataStore();
 
-  async function setupPlayer(){
-    try{
+  async function setupPlayer() {
+    try {
       await TrackPlayer.setupPlayer({});
       await TrackPlayer.add({
-        url: urlRadio, 
+        url: urlRadio,
         artwork: require('../../assets/angel-cover.png'),
         title: 'Rádio A Hora do Anjo',
         artist: 'De segunda à sexta de 18h às 19h'
       });
       await TrackPlayer.updateOptions({
         stopWithApp: true,
-        capabilities:[Capability.Play, Capability.Pause],
+        capabilities: [Capability.Play, Capability.Pause],
         compactCapabilities: [Capability.Play, Capability.Pause],
         notificationCapabilities: [Capability.Play, Capability.Pause],
       });
       setStatusPlayer(true);
-    }catch(e){
+    } catch (e) {
       console.log(e);
     }
   }
 
-  async function togglePlayback(playbackState){
+  async function togglePlayback(playbackState) {
     const currentTrack = await TrackPlayer.getCurrentTrack();
-    if(currentTrack !== null){
-      if( playbackState === State.Paused || 
-          playbackState === State.Ready
-        ){
-        try{
+    if (currentTrack !== null) {
+      if (playbackState === State.Paused ||
+        playbackState === State.Ready
+      ) {
+        try {
           setLoading(true);
           await TrackPlayer.play();
 
-        }catch(e){
+        } catch (e) {
           console.log(e);
-        }finally{
+        } finally {
           setLoading(false);
         }
-      }else{
+      } else {
         await TrackPlayer.pause();
       }
     }
   }
 
   useEffect(() => {
-    if(statusPlayer === false){
+    if (statusPlayer === false) {
       setupPlayer();
     }
-  },[]);
+  }, []);
 
   return (
     <Container
@@ -85,10 +85,10 @@ export function PlayButton(){
       >
         {
           loading ?
-          <Load size={28} player={true} /> :
-          playbackState === State.Playing ?
-          <Stop size={32} color={theme.colors.light} /> :
-          <Play size={32} color={theme.colors.light} />
+            <Load size={28} player={true} /> :
+            playbackState === State.Playing ?
+              <Stop size={32} color={theme.colors.light} /> :
+              <Play size={32} color={theme.colors.light} />
         }
       </Button>
     </Container>
