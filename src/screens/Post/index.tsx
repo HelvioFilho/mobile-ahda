@@ -1,17 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import {
-  ScrollView,
-  StatusBar,
-  useWindowDimensions
-} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { CaretLeft } from 'phosphor-react-native';
+import React, { useEffect, useState } from 'react';
+import { ScrollView, useWindowDimensions } from 'react-native';
 import RenderHTML from 'react-native-render-html';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { useTheme } from 'styled-components';
 import { ImageGallery } from '../../components/ImageGallery';
 import { api } from '../../services/api';
-import { postStore } from '../../services/store';
-import { useNavigation } from '@react-navigation/native';
+import { appDataStore } from '../../services/store';
 
 import {
   About,
@@ -40,7 +36,7 @@ interface GalleryProps {
 
 export function Post() {
 
-  const { data } = postStore();
+  const { data } = appDataStore();
   const { width } = useWindowDimensions();
   const theme = useTheme();
   const { goBack } = useNavigation();
@@ -98,7 +94,6 @@ export function Post() {
   };
 
   const [imageGallery, setImageGallery] = useState<GalleryProps[]>([]);
-  const [statusBar, setStatusBar] = useState(false);
 
   async function getImageGallery(id: string) {
     try {
@@ -113,15 +108,6 @@ export function Post() {
     }
   }
 
-  async function handleScroll(event: any) {
-    if (event.nativeEvent.contentOffset.y > 268 && statusBar === false) {
-      setStatusBar(true);
-    }
-    if (event.nativeEvent.contentOffset.y < 268 && statusBar === true) {
-      setStatusBar(false);
-    }
-  }
-
   useEffect(() => {
     getImageGallery(data.id);
   }, []);
@@ -130,21 +116,13 @@ export function Post() {
     <>
       <ScrollView
         style={{ flex: 1, backgroundColor: theme.colors.light }}
-        onScroll={(event) => handleScroll(event)}
-        scrollEventThrottle={16}
       >
-        <StatusBar
-          backgroundColor={statusBar ? theme.colors.light : 'transparent'}
-          barStyle={statusBar ? 'dark-content' : 'light-content'}
-          translucent
-        />
         <CoverWrapper>
           <Cover
             source={{ uri: data.cover }}
             resizeMode='stretch'
             resizeMethod='scale'
           />
-
         </CoverWrapper>
         <Container>
           <Title>{data.title}</Title>

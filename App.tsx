@@ -1,20 +1,29 @@
 import 'intl';
 import 'intl/locale-data/jsonp/pt-BR';
+import React, { useEffect } from 'react';
+import { SafeAreaView, StatusBar } from 'react-native';
 import 'react-native-gesture-handler';
-import React from 'react';
-import { SafeAreaView } from 'react-native';
 
-import { ThemeProvider } from 'styled-components';
 import {
-  useFonts,
   Lato_100Thin,
   Lato_300Light,
   Lato_400Regular,
-  Lato_700Bold
+  Lato_700Bold, useFonts
 } from '@expo-google-fonts/lato';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ThemeProvider } from 'styled-components';
+import { Load } from './src/components/Load';
 import theme from './src/global/styles/theme';
 import { Routes } from './src/routes';
-import { Load } from './src/components/Load';
+import { appDataStore } from './src/services/store';
+
+const { ASYNC_KEY } = process.env;
+
+export interface SettingsProps {
+  name: string;
+  email: string;
+  notification: boolean;
+}
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -24,10 +33,26 @@ export default function App() {
     Lato_700Bold
   });
 
+  const { setStartSettings } = appDataStore();
+
+  async function getData() {
+    const response = await AsyncStorage.getItem(ASYNC_KEY);
+    const settings = response ? JSON.parse(response) : {} as SettingsProps;
+    setStartSettings(settings);
+  }
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <ThemeProvider theme={theme} >
       <SafeAreaView style={{ flex: 1 }}>
-        { fontsLoaded ? <Routes /> : <Load size={35} />}
+        <StatusBar
+          backgroundColor={theme.colors.background}
+          barStyle='dark-content'
+        />
+        {fontsLoaded ? <Routes /> : <Load size={35} />}
       </SafeAreaView>
     </ThemeProvider>
   );
