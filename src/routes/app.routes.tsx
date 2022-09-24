@@ -132,7 +132,8 @@ export function BottomRoute() {
         options={{
           tabBarIcon: ({ focused, color }) => (
             <Gear size={32} color={color} weight={focused ? 'fill' : 'regular'} />
-          )
+          ),
+          tabBarHideOnKeyboard: true,
         }}
       />
     </Navigator>
