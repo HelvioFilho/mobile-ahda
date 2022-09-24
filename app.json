@@ -6,6 +6,17 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "softwareKeyboardLayoutMode": "pan"
+    "softwareKeyboardLayoutMode": "pan",
+    "expo": {
+      "plugins": [
+        [
+          "expo-notifications",
+          {
+            "icon": "./src/assets/icon.png",
+            "color": "#CAEAF5"
+          }
+        ]
+      ]
+    }
   }
 }
