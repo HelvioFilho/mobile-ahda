@@ -21,9 +21,12 @@ export const ContainerForm = styled.View`
 
 export const SaveButton = styled.TouchableOpacity`
   position: relative;
+  width: 50px;
+  height: 50px;
   top: 0;
   left: 20px;
-  padding: 11px;
+  justify-content: center;
+  align-items: center;
   border-left-width: 4px;
   border-left-color: ${({ theme }) => theme.colors.background};
   background-color: ${({ theme }) => theme.colors.success};
