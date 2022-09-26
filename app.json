@@ -1,4 +1,5 @@
 {
+  "softwareKeyboardLayoutMode": "pan",
   "expo": {
     "name": "ahda",
     "slug": "ahda",
@@ -6,17 +7,14 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "softwareKeyboardLayoutMode": "pan",
-    "expo": {
-      "plugins": [
-        [
-          "expo-notifications",
-          {
-            "icon": "./src/assets/icon.png",
-            "color": "#CAEAF5"
-          }
-        ]
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./src/assets/icon.png",
+          "color": "#CAEAF5"
+        }
       ]
-    }
+    ]
   }
 }
