@@ -159,7 +159,7 @@ export function Search() {
                 <TextWarning>
                   Nenhuma publicação corresponde a pesquisa,
                   verifique a ortografia ou tente uma combinação
-                  de palavras diferentes!
+                  diferente de palavras!
                 </TextWarning>
               </ContainerWarning>
             }
