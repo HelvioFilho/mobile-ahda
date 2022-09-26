@@ -27,6 +27,7 @@ import {
   SubTitle,
   Title
 } from './styles';
+import { Load } from '../../components/Load';
 
 const { KEY } = process.env;
 
@@ -173,7 +174,12 @@ export function Message() {
                         onContentSizeChange={(e) => setInputHeight(e.nativeEvent.contentSize.height + 30)}
                       />
                       <ContainerButton disabled={isSubmitting} onPress={handleSubmit}>
-                        <ButtonText>Enviar</ButtonText>
+                        {
+                          isSubmitting  ?
+                          <Load size={24} player={true}/> :
+                          <ButtonText>Enviar</ButtonText>
+
+                        }
                       </ContainerButton>
                     </ContainerForm>
                   )
