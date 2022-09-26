@@ -23,6 +23,7 @@ import {
   TextSwitch,
   Title
 } from './styles';
+import { Load } from '../../components/Load';
 
 const { ASYNC_KEY } = process.env;
 
@@ -103,7 +104,41 @@ export function Settings() {
     }
   }
 
-  
+  async function handleChangedNotification() {
+    try {
+      const isNotification = !notification;
+      setNotification(isNotification);
+      setDataStorage({
+        name,
+        email,
+        notification: isNotification,
+      });
+      if (isNotification) {
+        const days = [2, 3, 4, 5, 6];
+
+        await Promise.all(days.map(async (day) => {
+          await Notifications.scheduleNotificationAsync({
+            identifier: 'alert start program',
+            content: {
+              title: 'A hora do anjo',
+              body: 'O programa está para começar!',
+              sound: true,
+            },
+            trigger: {
+              hour: 18,
+              minute: 0,
+              weekday: day,
+              repeats: true
+            }
+          });
+        }));
+      } else {
+        await Notifications.cancelAllScheduledNotificationsAsync();
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   useEffect(() => {
     setName(startSettings.name);
@@ -134,7 +169,11 @@ export function Settings() {
                 disabled={isSubmitting}
                 onPress={handleChangedName}
               >
-                <FloppyDisk size={28} color={theme.colors.light} />
+                {
+                  !isSubmitting ?
+                    <FloppyDisk size={28} color={theme.colors.light} /> :
+                    <Load size={20} player={true} />
+                }
               </SaveButton>
             </InputField>
             <InputField
@@ -151,7 +190,11 @@ export function Settings() {
                 disabled={isSubmitting}
                 onPress={handleChangedEmail}
               >
-                <FloppyDisk size={28} color={theme.colors.light} />
+                {
+                  !isSubmitting ?
+                    <FloppyDisk size={28} color={theme.colors.light} /> :
+                    <Load size={20} player={true} />
+                }
               </SaveButton>
             </InputField>
             <SwitchWrapper>
@@ -163,7 +206,7 @@ export function Settings() {
                 }}
                 style={{ transform: [{ scaleX: 1.3 }, { scaleY: 1.3 }] }}
                 ios_backgroundColor={theme.colors.background}
-                onValueChange={() => {}}
+                onValueChange={handleChangedNotification}
                 thumbColor={theme.colors.text_light}
                 value={notification}
               />
