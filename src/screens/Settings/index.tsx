@@ -13,6 +13,7 @@ import { useTheme } from 'styled-components';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SettingsProps } from '../../../App';
+import { Load } from '../../components/Load';
 import { WarningModal } from '../../components/WarningModal';
 import { appDataStore } from '../../services/store';
 import {
@@ -23,7 +24,6 @@ import {
   TextSwitch,
   Title
 } from './styles';
-import { Load } from '../../components/Load';
 
 const { ASYNC_KEY } = process.env;
 
@@ -67,6 +67,10 @@ export function Settings() {
   }
 
   async function handleChangedName() {
+    if (startSettings.name === name) {
+      return;
+    }
+    setIsSubmitting(true);
     try {
       if (name !== '') await schema.name.validate({ name });
       setDataStorage({
@@ -74,11 +78,23 @@ export function Settings() {
         email,
         notification
       });
+      setWarning({
+        height: 170,
+        message: "Nome atualizado com sucesso!",
+        color: theme.colors.error
+      });
+      setVisible(true);
     } catch (e) {
       if (e instanceof Yup.ValidationError) {
         setNameError(e.message);
       } else {
         console.log(e);
+        setWarning({
+          height: 210,
+          message: "Algo deu errado e o seu nome não pode ser atualizado, por favor tente novamente mais tarde",
+          color: theme.colors.error
+        });
+        setVisible(true);
       }
     } finally {
       setIsSubmitting(false);
@@ -86,6 +102,10 @@ export function Settings() {
   }
 
   async function handleChangedEmail() {
+    if (startSettings.email === email) {
+      return;
+    }
+    setIsSubmitting(true)
     try {
       if (email !== '') await schema.email.validate({ email });
       setDataStorage({
@@ -93,11 +113,23 @@ export function Settings() {
         email,
         notification
       });
+      setWarning({
+        height: 170,
+        message: "E-mail atualizado com sucesso!",
+        color: theme.colors.error
+      });
+      setVisible(true);
     } catch (e) {
       if (e instanceof Yup.ValidationError) {
         setEmailError(e.message);
       } else {
         console.log(e);
+        setWarning({
+          height: 210,
+          message: "Algo deu errado e o seu nome não pode ser atualizado, por favor tente novamente mais tarde",
+          color: theme.colors.error
+        });
+        setVisible(true);
       }
     } finally {
       setIsSubmitting(false);
@@ -132,8 +164,20 @@ export function Settings() {
             }
           });
         }));
+        setWarning({
+          height: 180,
+          message: "As notificações foram ativadas, agora você será alertado antes do programa começar!",
+          color: theme.colors.error
+        });
+        setVisible(true);
       } else {
         await Notifications.cancelAllScheduledNotificationsAsync();
+        setWarning({
+          height: 180,
+          message: "As notificações foram desativadas, agora você não será mais alertado antes do programa começar!",
+          color: theme.colors.error
+        });
+        setVisible(true);
       }
     } catch (e) {
       console.log(e);
@@ -160,7 +204,12 @@ export function Settings() {
             <InputField
               placeholder='Nome'
               label='Nome'
-              onChangeText={setName}
+              onChangeText={(name) => {
+                setName(name);
+                if (name.length === 4) {
+                  setNameError(null);
+                }
+              }}
               value={name}
               autoCorrect={false}
               error={nameError}
@@ -180,6 +229,7 @@ export function Settings() {
               placeholder='E-mail'
               label='E-mail'
               onChangeText={setEmail}
+              onFocus={() => setEmailError(null)}
               value={email}
               autoCapitalize='none'
               autoCorrect={false}
