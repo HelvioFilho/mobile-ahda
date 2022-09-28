@@ -25,7 +25,7 @@ export function PlayButton() {
       await TrackPlayer.setupPlayer({});
       await TrackPlayer.add({
         url: urlRadio,
-        artwork: require('../../assets/angel-cover.png'),
+        artwork: require('../../assets/angel-blue.png'),
         title: 'Rádio A Hora do Anjo',
         artist: 'De segunda à sexta de 18h às 19h'
       });
@@ -65,6 +65,9 @@ export function PlayButton() {
   useEffect(() => {
     if (statusPlayer === false) {
       setupPlayer();
+    }
+    return () => {
+      setStatusPlayer(false);
     }
   }, []);
 
