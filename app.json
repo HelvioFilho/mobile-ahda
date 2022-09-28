@@ -4,17 +4,12 @@
     "name": "ahda",
     "slug": "ahda",
     "version": "1.0.0",
+    "orientation": "portrait",
     "assetBundlePatterns": [
       "**/*"
     ],
-    "plugins": [
-      [
-        "expo-notifications",
-        {
-          "icon": "./src/assets/icon.png",
-          "color": "#CAEAF5"
-        }
-      ]
-    ]
+    "notification": {
+      "icon": "./src/assets/notification.png"
+    }
   }
 }

@@ -17,10 +17,13 @@ import { Load } from '../../components/Load';
 import { WarningModal } from '../../components/WarningModal';
 import { appDataStore } from '../../services/store';
 import {
+  ButtonAbout,
   Container,
+  ContainerFooter,
   ContainerForm,
   SaveButton,
   SwitchWrapper,
+  TextAbout,
   TextSwitch,
   Title
 } from './styles';
@@ -147,25 +150,24 @@ export function Settings() {
       });
       if (isNotification) {
         const days = [2, 3, 4, 5, 6];
-
         await Promise.all(days.map(async (day) => {
           await Notifications.scheduleNotificationAsync({
-            identifier: 'alert start program',
+            identifier: `program${day}`,
             content: {
               title: 'A hora do anjo',
-              body: 'O programa está para começar!',
+              body: 'O programa começará em 5 minutos.',
               sound: true,
             },
             trigger: {
-              hour: 18,
-              minute: 0,
+              hour: 17,
+              minute: 55,
               weekday: day,
               repeats: true
             }
           });
         }));
         setWarning({
-          height: 180,
+          height: 200,
           message: "As notificações foram ativadas, agora você será alertado antes do programa começar!",
           color: theme.colors.error
         });
@@ -173,7 +175,7 @@ export function Settings() {
       } else {
         await Notifications.cancelAllScheduledNotificationsAsync();
         setWarning({
-          height: 180,
+          height: 200,
           message: "As notificações foram desativadas, agora você não será mais alertado antes do programa começar!",
           color: theme.colors.error
         });
@@ -217,6 +219,7 @@ export function Settings() {
               <SaveButton
                 disabled={isSubmitting}
                 onPress={handleChangedName}
+                activeOpacity={0.8}
               >
                 {
                   !isSubmitting ?
@@ -239,6 +242,7 @@ export function Settings() {
               <SaveButton
                 disabled={isSubmitting}
                 onPress={handleChangedEmail}
+                activeOpacity={0.8}
               >
                 {
                   !isSubmitting ?
@@ -262,6 +266,11 @@ export function Settings() {
               />
             </SwitchWrapper>
           </ContainerForm>
+          <ContainerFooter>
+            <ButtonAbout>
+              <TextAbout>Sobre o Aplicativo</TextAbout>
+            </ButtonAbout>
+          </ContainerFooter>
           <Modal
             animationType='fade'
             transparent

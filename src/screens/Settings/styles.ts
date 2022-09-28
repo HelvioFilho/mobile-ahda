@@ -43,3 +43,23 @@ export const TextSwitch = styled.Text`
   font-size: ${RFValue(16)}px;
   width: 80%;
 `;
+
+export const ContainerFooter = styled.View`
+  position: absolute;
+  width: 100%;
+  height: 50px;
+  bottom: 55px;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const ButtonAbout = styled.TouchableOpacity`
+  border-radius: 40px;
+  padding: 10px 25px;
+  background-color: ${({ theme }) => theme.colors.success};
+`;
+
+export const TextAbout = styled.Text`
+  font-size: ${RFValue(16)}px;
+  color: ${({ theme }) => theme.colors.light};
+`;
