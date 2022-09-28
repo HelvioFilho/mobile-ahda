@@ -80,7 +80,6 @@ export const AboutWrapper = styled.View`
   padding: 10px 15px;
   border-radius: 10px;
   background-color: ${({ theme }) => theme.colors.light};
-
 `;
 
 export const About = styled.Text`
@@ -98,5 +97,5 @@ export const BackButton = styled.TouchableOpacity`
   border-radius: ${RFValue(15)}px;
   border-width: 1px;
   border-color: ${({ theme }) => theme.colors.light};
-  background-color: ${({ theme }) => theme.colors.tabBarColor.active};
+  background-color: ${({ theme }) => theme.colors.mark};
 `;

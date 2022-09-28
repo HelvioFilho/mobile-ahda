@@ -45,7 +45,7 @@ export const ContainerUser = styled.View`
   justify-content: center;
   
   width: ${RFPercentage(24)}px;
-  background-color: ${({ theme }) => theme.colors.tabBarColor.active};
+  background-color: ${({ theme }) => theme.colors.mark};
   border-top-right-radius: 15px;
   border-bottom-right-radius: 15px;
 `;

@@ -8,15 +8,14 @@ export default {
     dark: '#000000',
 
     background: '#F1F1F1',
+    mark:'#E32F45',
 
     tabBarColor: {
-      active:'#E32F45',
+      active:'#4B92D4',
       player: '#FFFFFF',
       shadow: '#7F5DF0',
     },
-
-    neutral: '#4B92D4',
-
+    
     success: '#4DCFC0',
     warning: '#EEA63A',
     error: '#E83F5B',
