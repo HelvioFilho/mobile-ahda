@@ -1,22 +1,24 @@
 import React, { useState } from 'react';
+import { Formik } from 'formik';
 import {
-  Keyboard, 
-  KeyboardAvoidingView, 
-  Modal, 
+  Keyboard,
+  KeyboardAvoidingView,
+  Modal,
   Platform,
   ScrollView,
   TouchableWithoutFeedback
 } from 'react-native';
 import * as Yup from 'yup';
-import { Formik } from 'formik';
 
 import SendLeft from '../../assets/send-left.png';
 import SendRight from '../../assets/send-right.png';
 
 import { useTheme } from 'styled-components';
 import { InputField } from '../../components/InputField';
+import { Load } from '../../components/Load';
 import { WarningModal } from '../../components/WarningModal';
 import { api } from '../../services/api';
+import { appDataStore } from '../../services/store';
 import {
   ButtonText,
   Container,
@@ -27,7 +29,6 @@ import {
   SubTitle,
   Title
 } from './styles';
-import { Load } from '../../components/Load';
 
 const { KEY } = process.env;
 
@@ -39,17 +40,18 @@ interface WarningProps {
 
 export function Message() {
 
-  const values = {
-    name: '',
-    email: '',
-    message: '',
-  }
-
   const [inputHeight, setInputHeight] = useState(50);
   const [visible, setVisible] = useState(false);
   const [warning, setWarning] = useState<WarningProps>({} as WarningProps);
 
   const theme = useTheme();
+  const { startSettings } = appDataStore();
+
+  const values = {
+    name: startSettings.name ? startSettings.name : '',
+    email: startSettings.email ? startSettings.email : '',
+    message: '',
+  }
 
   const schema = Yup.object().shape({
     message: Yup
@@ -175,9 +177,9 @@ export function Message() {
                       />
                       <ContainerButton disabled={isSubmitting} onPress={handleSubmit}>
                         {
-                          isSubmitting  ?
-                          <Load size={24} player={true}/> :
-                          <ButtonText>Enviar</ButtonText>
+                          isSubmitting ?
+                            <Load size={24} player={true} /> :
+                            <ButtonText>Enviar</ButtonText>
 
                         }
                       </ContainerButton>
