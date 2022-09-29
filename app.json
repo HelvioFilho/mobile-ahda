@@ -8,8 +8,9 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "notification": {
-      "icon": "./src/assets/notification.png"
+    "android": {
+      "useNextNotificationsApi": true,
+      "permissions": ["RECEIVE_BOOT_COMPLETED"]
     }
   }
 }

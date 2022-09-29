@@ -16,6 +16,7 @@ import { Load } from './src/components/Load';
 import theme from './src/global/styles/theme';
 import { Routes } from './src/routes';
 import { appDataStore } from './src/services/store';
+import * as Notifications from 'expo-notifications';
 
 const { ASYNC_KEY } = process.env;
 
@@ -35,6 +36,25 @@ export default function App() {
 
   const { setStartSettings } = appDataStore();
 
+  async function permissions(){
+    await Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: true,
+      })
+    });
+
+    return await Notifications.requestPermissionsAsync({
+      ios: {
+        allowAlert: true,
+        allowBadge: true,
+        allowSound: true,
+        allowAnnouncements: true,
+      },
+    });
+  }
+
   async function getData() {
     const response = await AsyncStorage.getItem(ASYNC_KEY);
     const settings = response ? JSON.parse(response) : {} as SettingsProps;
@@ -43,6 +63,7 @@ export default function App() {
 
   useEffect(() => {
     getData();
+    permissions();
   }, []);
 
   return (
