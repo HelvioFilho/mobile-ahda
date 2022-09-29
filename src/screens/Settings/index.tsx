@@ -1,4 +1,3 @@
-import * as Notifications from 'expo-notifications';
 import { FloppyDisk } from 'phosphor-react-native';
 import React, { useEffect, useState } from 'react';
 import {
@@ -6,6 +5,7 @@ import {
   KeyboardAvoidingView, Modal, Platform,
   Switch, TouchableWithoutFeedback
 } from 'react-native';
+import * as Notifications from 'expo-notifications';
 import * as Yup from 'yup';
 import { InputField } from '../../components/InputField';
 
@@ -27,6 +27,7 @@ import {
   TextSwitch,
   Title
 } from './styles';
+import { About } from '../../components/About';
 
 const { ASYNC_KEY } = process.env;
 
@@ -44,6 +45,7 @@ export function Settings() {
   const [emailError, setEmailError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [visibleAbout, setVisibleAbout] = useState(false);
   const [warning, setWarning] = useState<WarningProps>({} as WarningProps);
 
   const theme = useTheme();
@@ -156,7 +158,8 @@ export function Settings() {
             content: {
               title: 'A hora do anjo',
               body: 'O programa começará em 5 minutos.',
-              sound: true,
+              sound: 'default',
+              priority: Notifications.AndroidNotificationPriority.HIGH,
             },
             trigger: {
               hour: 17,
@@ -267,7 +270,10 @@ export function Settings() {
             </SwitchWrapper>
           </ContainerForm>
           <ContainerFooter>
-            <ButtonAbout>
+            <ButtonAbout
+              onPress={() => setVisibleAbout(true)}
+              activeOpacity={0.8}
+            >
               <TextAbout>Sobre o Aplicativo</TextAbout>
             </ButtonAbout>
           </ContainerFooter>
@@ -283,6 +289,16 @@ export function Settings() {
               message={warning.message}
               colorButton={warning.color}
               closeModal={() => setVisible(false)}
+            />
+          </Modal>
+          <Modal
+            animationType='slide'
+            transparent
+            visible={visibleAbout}
+            onRequestClose={() => setVisibleAbout(false)}
+          >
+            <About 
+              closeModal={() => setVisibleAbout(false)}
             />
           </Modal>
         </Container>
