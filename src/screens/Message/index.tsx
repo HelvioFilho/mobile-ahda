@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { Formik } from 'formik';
 import {
   Keyboard,
@@ -29,6 +29,7 @@ import {
   SubTitle,
   Title
 } from './styles';
+import { useFocusEffect } from '@react-navigation/native';
 
 const { KEY } = process.env;
 
@@ -38,21 +39,22 @@ interface WarningProps {
   color: string;
 }
 
+interface DefaultValueProps {
+  name: string;
+  email: string;
+  message: string;
+}
+
 export function Message() {
 
   const [inputHeight, setInputHeight] = useState(50);
   const [visible, setVisible] = useState(false);
   const [warning, setWarning] = useState<WarningProps>({} as WarningProps);
+  const [val, setVal] = useState<DefaultValueProps>({} as DefaultValueProps);
 
   const theme = useTheme();
   const { startSettings } = appDataStore();
-
-  const values = {
-    name: startSettings.name ? startSettings.name : '',
-    email: startSettings.email ? startSettings.email : '',
-    message: '',
-  }
-
+  
   const schema = Yup.object().shape({
     message: Yup
       .string()
@@ -68,6 +70,14 @@ export function Message() {
       .min(3, 'O nome precisa ter mais que 3 caracteres!')
       .required('Nome não pode ser vazio!')
   });
+
+  useFocusEffect(useCallback(() => {
+    setVal({
+      name: startSettings.name ? startSettings.name : '',
+      email: startSettings.email ? startSettings.email : '',
+      message: '',
+    });
+  },[startSettings]));
 
   return (
     <KeyboardAvoidingView
@@ -90,7 +100,8 @@ export function Message() {
             <Title>Nos envie {'\n'}uma mensagem!</Title>
             <SubTitle>Suas mensagens podem ser lidas no programa, esse é o seu contato direto com A hora do anjo, então nos escreva!</SubTitle>
             <Formik
-              initialValues={values}
+              enableReinitialize={true}
+              initialValues={val}
               validationSchema={schema}
               onSubmit={
                 (values, formikActions) => {
@@ -142,6 +153,7 @@ export function Message() {
                     handleSubmit,
                     isSubmitting,
                   }: any) => {
+                  
                   const { name, email, message } = values;
 
                   return (
