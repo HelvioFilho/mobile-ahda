@@ -66,6 +66,11 @@ export function BottomRoute() {
     Keyboard.addListener("keyboardDidShow", () => {
       setShowKeyboard(true);
     });
+
+    return () => {
+      Keyboard.removeAllListeners("keyboardDidHide");
+      Keyboard.removeAllListeners("keyboardDidShow");
+    }
   }, []);
 
   return (
