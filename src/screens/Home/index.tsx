@@ -4,8 +4,17 @@ import { useTheme } from 'styled-components';
 import { Load } from '../../components/Load';
 import { PostList } from '../../components/PostList';
 import { api } from '../../services/api';
+import Animated, {
+  Extrapolate,
+  interpolate,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue
+} from 'react-native-reanimated';
 
-import { Container, ContainerWarn, TextWarn } from './styles';
+import LogoImage from '../../assets/angel-white.png';
+import { Container, ContainerWarn, Header, Logo, TextWarn, TitleHeader } from './styles';
+import { getStatusBarHeight } from 'react-native-iphone-x-helper';
 
 const { KEY } = process.env;
 
@@ -40,6 +49,23 @@ export function Home() {
 
   const theme = useTheme();
 
+  const statusBarHeight = getStatusBarHeight();
+  const scrollY = useSharedValue(0);
+  const scrollHandler = useAnimatedScrollHandler(event => {
+    scrollY.value = event.contentOffset.y;
+  });
+
+  const headerStyleAnimation = useAnimatedStyle(() => {
+    return {
+      height: interpolate(
+        scrollY.value,
+        [0, 200],
+        [200, statusBarHeight + 50],
+        Extrapolate.CLAMP
+      )
+    }
+  });
+
   async function getPosts() {
     if (page <= totalPage && Object.keys(update).length === 0) {
       try {
@@ -62,7 +88,7 @@ export function Home() {
         setStartLoading(false);
         setLoading(false);
       }
-    }else if(Object.keys(update).length > 0){
+    } else if (Object.keys(update).length > 0) {
       setPost(update.data);
       setTotalPage(update.count);
       setUpdate({} as UpdatePostProps);
@@ -73,12 +99,12 @@ export function Home() {
     try {
       const oldPost = post.length > 4 ? post.slice(0, 4) : post;
       const { data } = await api.get(`get_post?page=1&size=${size}&key=${KEY}`);
-      
+
       if (JSON.stringify(oldPost) !== JSON.stringify(data.data)) {
         setUpdate(data);
-        if(page === 1){
+        if (page === 1) {
           getPosts();
-        }else{
+        } else {
           setPage(1);
         }
       }
@@ -114,13 +140,23 @@ export function Home() {
                 />
               }
               onEndReached={() => {
-                if(page < totalPage){
-                  if(!loading){
+                if (page < totalPage) {
+                  if (!loading) {
                     setPage(oldValue => (oldValue + 1))
                   }
                 }
               }}
               onEndReachedThreshold={0.1}
+              ListHeaderComponent={
+                <Header>
+                  <Logo
+                    resizeMethod='resize'
+                    resizeMode='contain'
+                    source={LogoImage}
+                  />
+                  <TitleHeader>Programa A hora do Anjo{'\n'}De segunda à sexta de 18h às 19h</TitleHeader>
+                </Header>
+              }
               ListFooterComponent={
                 loading ?
                   <Load size={32} />
