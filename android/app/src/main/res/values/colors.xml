@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <resources>
-  <color name="splashscreen_background">#FFFFFF</color>
+  <color name="splashscreen_background">#CAEAF5</color>
+  <color name="splashscreen_bg">#CAEAF5</color>
+  <color name="app_bg">#F1F1F1</color>
   <color name="notification_icon_color">#4B92D4</color>
 </resources>
