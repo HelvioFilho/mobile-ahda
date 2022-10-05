@@ -12,8 +12,8 @@ export const Container = styled.View`
 `;
 
 export const Title = styled.Text`
+  font-family: ${({ theme}) => theme.fonts.Bold};
   font-size: ${RFValue(26)}px;
-  font-weight: bold;
   text-align: center;
   margin: 15px 25px 0;
 `;
@@ -40,13 +40,14 @@ export const ContainerGallery = styled.View`
 
 export const TitleGallery = styled.Text`
   text-align: center;
+  font-family: ${({ theme}) => theme.fonts.Bold};
   font-size: ${RFValue(26)}px;
-  font-weight: bold;
   padding: 0 20px 15px;
 `;
 
 export const Published = styled.Text`
   text-align: center;
+  font-family: ${({ theme}) => theme.fonts.Regular};
   font-size: ${RFValue(12)}px;
 `;
 
@@ -71,6 +72,7 @@ export const Avatar = styled.Image`
 `;
 
 export const Name = styled.Text`
+  font-family: ${({ theme}) => theme.fonts.Medium};
   font-size: ${RFValue(14)}px;
   align-self: center;
 `;
@@ -83,6 +85,7 @@ export const AboutWrapper = styled.View`
 `;
 
 export const About = styled.Text`
+  font-family: ${({ theme}) => theme.fonts.Regular};
   font-size: ${RFValue(14)}px;  
 `;
 
@@ -97,5 +100,5 @@ export const BackButton = styled.TouchableOpacity`
   border-radius: ${RFValue(15)}px;
   border-width: 1px;
   border-color: ${({ theme }) => theme.colors.light};
-  background-color: ${({ theme }) => theme.colors.mark};
+  background-color: ${({ theme }) => theme.colors.tabBarColor.active};
 `;

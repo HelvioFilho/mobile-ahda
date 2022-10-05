@@ -11,8 +11,8 @@ export const Container = styled.View`
 `;
 
 export const Label = styled.Text`
+  font-family: ${({ theme}) => theme.fonts.Medium};
   font-size: ${RFValue(16)}px;
-  font-weight: 500;
   color: ${({theme}) => theme.colors.text};
   margin-bottom: 7px;
 `; 
@@ -20,6 +20,7 @@ export const Label = styled.Text`
 export const Field = styled(TextInput)`
   flex: 1;
   height: 100%;
+  font-family: ${({ theme}) => theme.fonts.Regular};
   font-size: ${RFValue(14)}px;
   color: #3D434D;
 `;
@@ -27,6 +28,7 @@ export const Field = styled(TextInput)`
 export const Error = styled.Text`
   color: #E83F5B;
   margin-top: 5px;
+  font-family: ${({ theme}) => theme.fonts.Regular};
   font-size: ${RFValue(14)}px;
 `;
 

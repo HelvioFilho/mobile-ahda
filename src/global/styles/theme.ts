@@ -8,7 +8,9 @@ export default {
     dark: '#000000',
 
     background: '#F1F1F1',
-    mark:'#E32F45',
+    // mark:'#E32F45',
+    mark:'#F64F64',
+
 
     tabBarColor: {
       active:'#4B92D4',
@@ -22,9 +24,8 @@ export default {
   },
   
   fonts: {
-    latoThin: 'Lato_100Thin',
-    latoLight: 'Lato_300Light',
-    latoRegular: 'Lato_400Regular',
-    latoBold: 'Lato_700Bold'
+    Regular: 'Roboto_400Regular',
+    Medium: 'Roboto_500Medium',
+    Bold: 'Roboto_700Bold',
   },
 }

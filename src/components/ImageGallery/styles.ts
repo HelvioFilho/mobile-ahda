@@ -2,10 +2,6 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import { Dimensions } from 'react-native';
 import styled from 'styled-components/native';
 
-interface ImageIndexProps {
-  active: boolean;
-}
-
 export const Container = styled.View`
   width: 100%;
 `;

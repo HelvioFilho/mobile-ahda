@@ -11,10 +11,10 @@ export const Container = styled.TouchableOpacity`
 `;
 
 export const Title = styled.Text`
+  font-family: ${({ theme}) => theme.fonts.Bold};
   font-size: ${RFValue(20)}px;
   margin-bottom: 8px;
   text-align: center;
-  font-weight: bold;
 `;
 
 export const Cover = styled.Image`
@@ -25,16 +25,18 @@ export const Cover = styled.Image`
 export const Preview = styled.Text`
   margin-top: -10px;
   padding: 4px 5px;
+  font-family: ${({ theme}) => theme.fonts.Regular};
   font-size: ${RFValue(14)}px;
 `;
 export const Date = styled.Text`
+  font-family: ${({ theme}) => theme.fonts.Regular};
   font-size: ${RFValue(12)}px;
   padding: 7px 6px;
   text-align: center;
 `;
 export const User = styled.Text`
+  font-family: ${({ theme}) => theme.fonts.Bold};
   font-size: ${RFValue(10)}px;
-  font-weight: bold;
   color: ${({ theme }) => theme.colors.light};
   padding: 8px 4px;
 `;

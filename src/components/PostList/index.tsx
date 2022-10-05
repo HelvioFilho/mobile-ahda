@@ -41,7 +41,7 @@ export function PostList({ data }: PostListProps) {
         resizeMode='stretch'
       />
       <ContainerUser>
-        <User>Por: {data.user.name}</User>
+        <User numberOfLines={1} >Por: {data.user.name}</User>
       </ContainerUser>
       <Preview>{data.preview}</Preview>
       <Separator />

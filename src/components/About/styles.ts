@@ -31,8 +31,8 @@ export const Body = styled.View`
 `;
 
 export const Title = styled.Text`
+  font-family: ${({ theme}) => theme.fonts.Bold};
   font-size: ${RFValue(18)}px;
-  font-weight: bold;
   text-align: center;
   margin-bottom: 20px;
 `;
@@ -43,11 +43,12 @@ export const Wrapper = styled.View`
 `;
 
 export const Label = styled.Text`
+  font-family: ${({ theme}) => theme.fonts.Bold};
   font-size: ${RFValue(16)}px;
-  font-weight: bold;
 `;
 
 export const Content = styled.Text`
+  font-family: ${({ theme}) => theme.fonts.Regular};
   font-size: ${RFValue(16)}px;
   margin-left: 5px;
 `;
@@ -58,7 +59,7 @@ export const Site = styled.TouchableOpacity`
 `;
 
 export const TextSite = styled.Text`
+  font-family: ${({ theme}) => theme.fonts.Bold};
   font-size: ${RFValue(16)}px;
-  font-weight: bold;
   color: ${({ theme }) => theme.colors.tabBarColor.active};
 `;

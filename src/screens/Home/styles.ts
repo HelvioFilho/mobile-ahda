@@ -23,8 +23,8 @@ export const Logo = styled.Image`
 
 export const TitleHeader = styled.Text`
   text-align: center;
+  font-family: ${({ theme}) => theme.fonts.Bold};
   font-size: ${RFValue(16)}px;
-  font-weight: bold;
 `;
 
 export const List = styled(FlatList)``;
@@ -38,5 +38,5 @@ export const ContainerWarn = styled.View`
 
 export const TextWarn = styled.Text`
   font-size: ${RFValue(18)}px;
-
+  font-family: ${({ theme}) => theme.fonts.Regular};
 `;

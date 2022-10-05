@@ -53,7 +53,7 @@ export function Post() {
   text = text.replace(/<p><img>/g, `<img`);
   text = text.replace(/"><\/p>/g, `">`);
   text = text.replace(/<p><br><\/p>/g, `<p style="margin: 15px 0"></p>`);
-
+  
   const tagsStyles = {
     h1: {
       margin: '5px 20px',

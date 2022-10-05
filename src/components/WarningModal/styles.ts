@@ -39,12 +39,13 @@ export const IconX = styled(Ionicons)``;
 
 export const TitleAlert = styled.Text`
   font-size: ${RFValue(20)}px;
-  font-weight: bold;
+  font-family: ${({ theme}) => theme.fonts.Bold};
   color: ${({ theme }) => theme.colors.dark};
 `;
 
 export const Message = styled.Text`
   width: 80%;
+  font-family: ${({ theme}) => theme.fonts.Regular};
   font-size: ${RFValue(14)}px;
 `;
 
@@ -66,6 +67,7 @@ export const Button = styled.TouchableOpacity<ButtonProps>`
 `;
 
 export const Title = styled.Text`
+  font-family: ${({ theme}) => theme.fonts.Regular};
   font-size: ${RFValue(14)}px;
   color: ${({ theme }) => theme.colors.light};
 `;

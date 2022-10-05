@@ -5,11 +5,11 @@ import { SafeAreaView, StatusBar } from 'react-native';
 import 'react-native-gesture-handler';
 
 import {
-  Lato_100Thin,
-  Lato_300Light,
-  Lato_400Regular,
-  Lato_700Bold, useFonts
-} from '@expo-google-fonts/lato';
+  Roboto_400Regular,
+  Roboto_500Medium,
+  Roboto_700Bold,
+  useFonts
+} from '@expo-google-fonts/roboto';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ThemeProvider } from 'styled-components';
 import { Load } from './src/components/Load';
@@ -28,15 +28,14 @@ export interface SettingsProps {
 
 export default function App() {
   const [fontsLoaded] = useFonts({
-    Lato_100Thin,
-    Lato_300Light,
-    Lato_400Regular,
-    Lato_700Bold
+    Roboto_400Regular,
+    Roboto_500Medium,
+    Roboto_700Bold,
   });
 
   const { setStartSettings } = appDataStore();
 
-  async function permissions(){
+  async function permissions() {
     await Notifications.setNotificationHandler({
       handleNotification: async () => ({
         shouldShowAlert: true,
