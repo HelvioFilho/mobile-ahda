@@ -12,6 +12,7 @@ export const Header = styled.View`
   background-color: #ffffff;
   border-bottom-width: 1px;
   border-color: rgba(0,0,0,0.3);
+  padding-top: 20px;
   padding-bottom: 15px;
   margin-bottom: 5px;
 `;

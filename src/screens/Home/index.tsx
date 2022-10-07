@@ -1,22 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, RefreshControl } from 'react-native';
+import { FlatList, Modal, RefreshControl } from 'react-native';
 import { useTheme } from 'styled-components';
 import { Load } from '../../components/Load';
 import { PostList } from '../../components/PostList';
-import { api } from '../../services/api';
-import Animated, {
-  Extrapolate,
-  interpolate,
-  useAnimatedScrollHandler,
-  useAnimatedStyle,
-  useSharedValue
-} from 'react-native-reanimated';
+import { api, bible } from '../../services/api';
 
 import LogoImage from '../../assets/angel-white.png';
 import { Container, ContainerWarn, Header, Logo, TextWarn, TitleHeader } from './styles';
-import { getStatusBarHeight } from 'react-native-iphone-x-helper';
+import { BibleModal } from '../../components/BibleModal';
 
 const { KEY } = process.env;
+const { TOKEN_B } = process.env;
 
 export interface PostProps {
   id: string;
@@ -38,6 +32,13 @@ interface UpdatePostProps {
   isUpdated: boolean;
 }
 
+interface DataBibleProps {
+  book: string;
+  chapter: number;
+  number: number;
+  text: string;
+}
+
 export function Home() {
   const [totalPage, setTotalPage] = useState(1);
   const [page, setPage] = useState(1);
@@ -45,26 +46,33 @@ export function Home() {
   const [loading, setLoading] = useState(false);
   const [post, setPost] = useState<PostProps[]>([]);
   const [update, setUpdate] = useState<UpdatePostProps>({} as UpdatePostProps);
+  const [dataBible, setDataBible] = useState<DataBibleProps>({} as DataBibleProps);
+  const [visible, setVisible] = useState(true);
   const size = 4;
 
   const theme = useTheme();
 
-  const statusBarHeight = getStatusBarHeight();
-  const scrollY = useSharedValue(0);
-  const scrollHandler = useAnimatedScrollHandler(event => {
-    scrollY.value = event.contentOffset.y;
-  });
-
-  const headerStyleAnimation = useAnimatedStyle(() => {
-    return {
-      height: interpolate(
-        scrollY.value,
-        [0, 200],
-        [200, statusBarHeight + 50],
-        Extrapolate.CLAMP
-      )
+  async function getBibleVerse() {
+    try{
+      const {data} = await bible.get('/verses/ra/random',{
+        headers: {
+          'Authorization': `Bearer ${TOKEN_B}`,
+        }
+      });
+      setDataBible({
+        book: data.book.name,
+        chapter: data.chapter,
+        number: data.number,
+        text: data.text
+      });
+    }catch (e) {
+      console.log(e.message);
     }
-  });
+  }
+
+  useEffect(() => {
+    getBibleVerse();
+  },[]);
 
   async function getPosts() {
     if (page <= totalPage && Object.keys(update).length === 0) {
@@ -168,6 +176,17 @@ export function Home() {
               <TextWarn>Ainda não há publicações.</TextWarn>
             </ContainerWarn>
       }
+      <Modal
+        animationType="fade"
+        transparent
+        visible={visible}
+        onRequestClose={() => setVisible(false)}
+      >
+        <BibleModal 
+          data={dataBible}
+          closeModal={() => setVisible(false)}
+        />
+      </Modal>
     </Container>
   );
 }
