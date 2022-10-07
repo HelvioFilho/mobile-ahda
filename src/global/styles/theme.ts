@@ -8,7 +8,7 @@ export default {
     dark: '#000000',
 
     background: '#F1F1F1',
-    // mark:'#E32F45',
+    backgroundModal: 'rgba(0,0,0,0.8)',
     mark:'#F64F64',
 
 

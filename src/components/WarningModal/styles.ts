@@ -15,7 +15,7 @@ export const Container = styled.View`
   height: 100%;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0,0,0,0.8);
+  background-color: ${({ theme }) => theme.colors.backgroundModal};
 `;
 
 export const ContainerModal = styled.View<ContainerProps>`
