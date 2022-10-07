@@ -47,7 +47,7 @@ export function Home() {
   const [post, setPost] = useState<PostProps[]>([]);
   const [update, setUpdate] = useState<UpdatePostProps>({} as UpdatePostProps);
   const [dataBible, setDataBible] = useState<DataBibleProps>({} as DataBibleProps);
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(false);
   const size = 4;
 
   const theme = useTheme();
@@ -65,6 +65,7 @@ export function Home() {
         number: data.number,
         text: data.text
       });
+      setVisible(true);
     }catch (e) {
       console.log(e.message);
     }
