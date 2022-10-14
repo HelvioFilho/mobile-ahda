@@ -3,11 +3,19 @@ import { FlatList, Modal, RefreshControl } from 'react-native';
 import { useTheme } from 'styled-components';
 import { Load } from '../../components/Load';
 import { PostList } from '../../components/PostList';
+import SplashScreen from 'react-native-splash-screen';
 import { api, bible } from '../../services/api';
 
 import LogoImage from '../../assets/angel-white.png';
 import { Container, ContainerWarn, Header, Logo, TextWarn, TitleHeader } from './styles';
 import { BibleModal } from '../../components/BibleModal';
+import Animated, {
+  Extrapolate,
+  interpolate,
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming
+} from 'react-native-reanimated';
 
 const { KEY } = process.env;
 const { TOKEN_B } = process.env;
@@ -52,9 +60,27 @@ export function Home() {
 
   const theme = useTheme();
 
+  const logoImageAnimation = useSharedValue(0);
+
+  const logoStyle = useAnimatedStyle(() => {
+    return {
+      opacity: logoImageAnimation.value
+    }
+  });
+
+  function closeBibleModal(){
+    setVisible(false);
+  }
+
+  useEffect(() => {
+    
+      logoImageAnimation.value = withTiming(1, {duration: 1000});
+    
+  }, []);
+
   async function getBibleVerse() {
-    try{
-      const {data} = await bible.get('/verses/ra/random',{
+    try {
+      const { data } = await bible.get('/verses/ra/random', {
         headers: {
           'Authorization': `Bearer ${TOKEN_B}`,
         }
@@ -66,14 +92,14 @@ export function Home() {
         text: data.text
       });
       setVisible(true);
-    }catch (e) {
+    } catch (e) {
       console.log(e.message);
     }
   }
 
   useEffect(() => {
     getBibleVerse();
-  },[]);
+  }, []);
 
   async function getPosts() {
     if (page <= totalPage && Object.keys(update).length === 0) {
@@ -158,11 +184,15 @@ export function Home() {
               onEndReachedThreshold={0.1}
               ListHeaderComponent={
                 <Header>
-                  <Logo
-                    resizeMethod='resize'
-                    resizeMode='contain'
-                    source={LogoImage}
-                  />
+                  <Animated.View
+                    style={logoStyle}
+                  >
+                    <Logo
+                      resizeMethod='resize'
+                      resizeMode='contain'
+                      source={LogoImage}
+                    />
+                  </Animated.View>
                   <TitleHeader>Programa A hora do Anjo{'\n'}De segunda à sexta de 18h às 19h</TitleHeader>
                 </Header>
               }
@@ -181,11 +211,11 @@ export function Home() {
         animationType="fade"
         transparent
         visible={visible}
-        onRequestClose={() => setVisible(false)}
+        onRequestClose={closeBibleModal}
       >
-        <BibleModal 
+        <BibleModal
           data={dataBible}
-          closeModal={() => setVisible(false)}
+          closeModal={closeBibleModal}
         />
       </Modal>
     </Container>

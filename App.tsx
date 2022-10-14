@@ -17,6 +17,7 @@ import theme from './src/global/styles/theme';
 import { Routes } from './src/routes';
 import { appDataStore } from './src/services/store';
 import * as Notifications from 'expo-notifications';
+import SplashScreen from 'react-native-splash-screen';
 
 const { ASYNC_KEY } = process.env;
 
@@ -63,6 +64,7 @@ export default function App() {
   useEffect(() => {
     getData();
     permissions();
+    SplashScreen.hide();
   }, []);
 
   return (
