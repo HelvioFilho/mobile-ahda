@@ -34,6 +34,7 @@ export function Search() {
   const [post, setPost] = useState<PostProps[]>([]);
   const [searchValue, setSearchValue] = useState('');
   const [isEmpty, setIsEmpty] = useState(false);
+  const [animated, setAnimated] = useState(false);
 
   const size = 2;
   const values = {
@@ -64,6 +65,7 @@ export function Search() {
           setPost(data.data);
         }
         setTotalPage(data.count);
+        setAnimated(true);
       } else {
         console.log(data.error);
       }
@@ -71,6 +73,7 @@ export function Search() {
       console.log(e);
     } finally {
       setLoading(false);
+      setAnimated(false);
     }
   }
 
@@ -135,7 +138,7 @@ export function Search() {
             keyExtractor={item => item.id}
             renderItem={({ item }) => {
               return (
-                <PostList data={item} />
+                <PostList data={item} animation={animated}/>
               )
             }}
             onEndReached={() => {
