@@ -138,7 +138,7 @@ export function Home() {
               keyExtractor={item => item.id}
               renderItem={({ item }) => {
                 return (
-                  <PostList data={item} />
+                  <PostList data={item} animation={animated}/>
                 )
               }}
               refreshControl={
