@@ -3,19 +3,11 @@ import { FlatList, Modal, RefreshControl } from 'react-native';
 import { useTheme } from 'styled-components';
 import { Load } from '../../components/Load';
 import { PostList } from '../../components/PostList';
-import SplashScreen from 'react-native-splash-screen';
 import { api, bible } from '../../services/api';
 
-import LogoImage from '../../assets/angel-white.png';
-import { Container, ContainerWarn, Header, Logo, TextWarn, TitleHeader } from './styles';
 import { BibleModal } from '../../components/BibleModal';
-import Animated, {
-  Extrapolate,
-  interpolate,
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming
-} from 'react-native-reanimated';
+import { Header } from '../../components/Header';
+import { Container, ContainerWarn, TextWarn } from './styles';
 
 const { KEY } = process.env;
 const { TOKEN_B } = process.env;
@@ -52,6 +44,7 @@ export function Home() {
   const [page, setPage] = useState(1);
   const [startLoading, setStartLoading] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [animated, setAnimated] = useState(false);
   const [post, setPost] = useState<PostProps[]>([]);
   const [update, setUpdate] = useState<UpdatePostProps>({} as UpdatePostProps);
   const [dataBible, setDataBible] = useState<DataBibleProps>({} as DataBibleProps);
@@ -59,24 +52,6 @@ export function Home() {
   const size = 4;
 
   const theme = useTheme();
-
-  const logoImageAnimation = useSharedValue(0);
-
-  const logoStyle = useAnimatedStyle(() => {
-    return {
-      opacity: logoImageAnimation.value
-    }
-  });
-
-  function closeBibleModal(){
-    setVisible(false);
-  }
-
-  useEffect(() => {
-    
-      logoImageAnimation.value = withTiming(1, {duration: 1000});
-    
-  }, []);
 
   async function getBibleVerse() {
     try {
@@ -96,10 +71,6 @@ export function Home() {
       console.log(e.message);
     }
   }
-
-  useEffect(() => {
-    getBibleVerse();
-  }, []);
 
   async function getPosts() {
     if (page <= totalPage && Object.keys(update).length === 0) {
@@ -152,6 +123,10 @@ export function Home() {
     getPosts();
   }, [page]);
 
+  useEffect(() => {
+    getBibleVerse();
+  }, []);
+
   return (
     <Container>
       {
@@ -183,18 +158,7 @@ export function Home() {
               }}
               onEndReachedThreshold={0.1}
               ListHeaderComponent={
-                <Header>
-                  <Animated.View
-                    style={logoStyle}
-                  >
-                    <Logo
-                      resizeMethod='resize'
-                      resizeMode='contain'
-                      source={LogoImage}
-                    />
-                  </Animated.View>
-                  <TitleHeader>Programa A hora do Anjo{'\n'}De segunda à sexta de 18h às 19h</TitleHeader>
-                </Header>
+                <Header animation={animated} />
               }
               ListFooterComponent={
                 loading ?
@@ -211,11 +175,17 @@ export function Home() {
         animationType="fade"
         transparent
         visible={visible}
-        onRequestClose={closeBibleModal}
+        onRequestClose={() => {
+          setVisible(false);
+          setAnimated(true);
+        }}
       >
         <BibleModal
           data={dataBible}
-          closeModal={closeBibleModal}
+          closeModal={() => {
+            setVisible(false);
+            setAnimated(true);
+          }}
         />
       </Modal>
     </Container>

@@ -8,26 +8,6 @@ export const Container = styled.SafeAreaView`
   background-color: ${({ theme }) => theme.colors.background};
 `;
 
-export const Header = styled.View`
-  background-color: #ffffff;
-  border-bottom-width: 1px;
-  border-color: rgba(0,0,0,0.3);
-  padding-top: 20px;
-  padding-bottom: 15px;
-  margin-bottom: 5px;
-`;
-
-export const Logo = styled.Image`
-  width: 100%;
-  height: 200px;
-`; 
-
-export const TitleHeader = styled.Text`
-  text-align: center;
-  font-family: ${({ theme}) => theme.fonts.Bold};
-  font-size: ${RFValue(16)}px;
-`;
-
 export const List = styled(FlatList)``;
 
 export const ContainerWarn = styled.View`
