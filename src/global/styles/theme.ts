@@ -10,7 +10,7 @@ export default {
     background: '#F1F1F1',
     backgroundModal: 'rgba(0,0,0,0.8)',
     mark:'#F64F64',
-
+    splash: '#CAEAF5',
 
     tabBarColor: {
       active:'#4B92D4',
