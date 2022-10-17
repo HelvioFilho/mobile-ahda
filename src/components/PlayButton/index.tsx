@@ -1,5 +1,5 @@
-import { Play, Stop } from 'phosphor-react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import LottieView from 'lottie-react-native';
 import TrackPlayer, {
   Capability,
   State,
@@ -8,8 +8,8 @@ import TrackPlayer, {
 
 import { useTheme } from 'styled-components';
 
+import PlayStop from '../../assets/play.json';
 import { appDataStore } from '../../services/store';
-import { Load } from '../Load';
 import { Button, Container } from './styles';
 
 export function PlayButton() {
@@ -19,6 +19,7 @@ export function PlayButton() {
   const playbackState = usePlaybackState();
   const theme = useTheme();
   const { statusPlayer, setStatusPlayer } = appDataStore();
+  const animationPlayStop = useRef(null);
 
   async function setupPlayer() {
     try {
@@ -44,20 +45,23 @@ export function PlayButton() {
   async function togglePlayback(playbackState) {
     const currentTrack = await TrackPlayer.getCurrentTrack();
     if (currentTrack !== null) {
+      setLoading(true);
       if (playbackState === State.Paused ||
         playbackState === State.Ready
       ) {
         try {
-          setLoading(true);
+          animationPlayStop.current.play(24, 0);
           await TrackPlayer.play();
-
         } catch (e) {
           console.log(e);
-        } finally {
-          setLoading(false);
         }
       } else {
-        await TrackPlayer.pause();
+        try {
+          animationPlayStop.current.play(0, 24);
+          await TrackPlayer.pause();
+        } catch (e) {
+          console.log(e);
+        }
       }
     }
   }
@@ -66,6 +70,12 @@ export function PlayButton() {
     if (statusPlayer === false) {
       setupPlayer();
     }
+    if (playbackState === State.Playing) {
+      animationPlayStop.current.play(0, 0);
+    } else {
+      animationPlayStop.current.play(24, 24);
+    }
+
     return () => {
       setStatusPlayer(false);
     }
@@ -86,13 +96,15 @@ export function PlayButton() {
         onPress={() => togglePlayback(playbackState)}
         disabled={loading}
       >
-        {
-          loading ?
-            <Load size={28} player={true} /> :
-            playbackState === State.Playing ?
-              <Stop size={32} color={theme.colors.light} /> :
-              <Play size={32} color={theme.colors.light} />
-        }
+        <LottieView
+          ref={animationPlayStop}
+          source={PlayStop}
+          style={{ height: 60, alignSelf: 'center' }}
+          resizeMode="contain"
+          loop={false}
+          autoPlay={false}
+          onAnimationFinish={() => setLoading(false)}    
+        />
       </Button>
     </Container>
   );
