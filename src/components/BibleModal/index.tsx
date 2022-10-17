@@ -1,22 +1,28 @@
 import React from 'react';
 import { View } from 'react-native';
 import { useTheme } from 'styled-components';
+import { appDataStore } from '../../services/store';
 
-import { Book, Close, Container, ContainerModal, Content, Header, IconX, Number, Separator, Text, Title } from './styles';
-
-interface DataBibleProps {
-  book: string;
-  chapter: number;
-  number: number;
-  text: string;
-}
+import { 
+  Book, 
+  Close, 
+  Container, 
+  ContainerModal, 
+  Content, 
+  Header, 
+  IconX, 
+  Number, 
+  Separator, 
+  Text, 
+  Title 
+} from './styles';
 
 interface BibleModalProps {
-  data: DataBibleProps;
   closeModal: () => void;
 }
 
-export function BibleModal({data, closeModal}: BibleModalProps){
+export function BibleModal({closeModal}: BibleModalProps){
+  const { bible } = appDataStore();
   const theme = useTheme();
   
   return (
@@ -37,9 +43,9 @@ export function BibleModal({data, closeModal}: BibleModalProps){
         </Close>
         </Header>
         <Separator />
-        <Book>{`Livro: ${data.book}`}</Book>
+        <Book>{`Livro: ${bible.book}`}</Book>
         <Content>
-          <Text><Number>{`${data.chapter}:${data.number} - `}</Number>{data.text}</Text>
+          <Text><Number>{`${bible.chapter}:${bible.number} - `}</Number>{bible.text}</Text>
         </Content>
       </ContainerModal>
     </Container>
