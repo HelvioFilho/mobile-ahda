@@ -3,14 +3,13 @@ import { FlatList, Modal, RefreshControl } from 'react-native';
 import { useTheme } from 'styled-components';
 import { Load } from '../../components/Load';
 import { PostList } from '../../components/PostList';
-import { api, bible } from '../../services/api';
+import { api } from '../../services/api';
 
 import { BibleModal } from '../../components/BibleModal';
 import { Header } from '../../components/Header';
 import { Container, ContainerWarn, TextWarn } from './styles';
 
 const { KEY } = process.env;
-const { TOKEN_B } = process.env;
 
 export interface PostProps {
   id: string;
@@ -32,13 +31,6 @@ interface UpdatePostProps {
   isUpdated: boolean;
 }
 
-interface DataBibleProps {
-  book: string;
-  chapter: number;
-  number: number;
-  text: string;
-}
-
 export function Home() {
   const [totalPage, setTotalPage] = useState(1);
   const [page, setPage] = useState(1);
@@ -47,30 +39,10 @@ export function Home() {
   const [animated, setAnimated] = useState(false);
   const [post, setPost] = useState<PostProps[]>([]);
   const [update, setUpdate] = useState<UpdatePostProps>({} as UpdatePostProps);
-  const [dataBible, setDataBible] = useState<DataBibleProps>({} as DataBibleProps);
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(true);
   const size = 4;
 
   const theme = useTheme();
-
-  async function getBibleVerse() {
-    try {
-      const { data } = await bible.get('/verses/ra/random', {
-        headers: {
-          'Authorization': `Bearer ${TOKEN_B}`,
-        }
-      });
-      setDataBible({
-        book: data.book.name,
-        chapter: data.chapter,
-        number: data.number,
-        text: data.text
-      });
-      setVisible(true);
-    } catch (e) {
-      console.log(e.message);
-    }
-  }
 
   async function getPosts() {
     if (page <= totalPage && Object.keys(update).length === 0) {
@@ -123,10 +95,6 @@ export function Home() {
     getPosts();
   }, [page]);
 
-  useEffect(() => {
-    getBibleVerse();
-  }, []);
-
   return (
     <Container>
       {
@@ -138,7 +106,7 @@ export function Home() {
               keyExtractor={item => item.id}
               renderItem={({ item }) => {
                 return (
-                  <PostList data={item} animation={animated}/>
+                  <PostList data={item} animation={animated} />
                 )
               }}
               refreshControl={
@@ -181,7 +149,6 @@ export function Home() {
         }}
       >
         <BibleModal
-          data={dataBible}
           closeModal={() => {
             setVisible(false);
             setAnimated(true);

@@ -12,22 +12,22 @@ import { Post } from '../screens/Post';
 import { Search } from '../screens/Search';
 import { Settings } from '../screens/Settings';
 
-function HomeScreen(){
-  const { Navigator, Screen} = createStackNavigator();
+function HomeScreen() {
+  const { Navigator, Screen } = createStackNavigator();
 
   return (
     <Navigator
-      screenOptions={{headerShown: false}}
+      screenOptions={{ headerShown: false }}
     >
-      <Screen 
+      <Screen
         name="HomeAndPost"
         component={Home}
       />
-      <Screen 
+      <Screen
         name="SearchAndPost"
         component={Search}
       />
-      <Screen 
+      <Screen
         name="Post"
         component={Post}
       />
@@ -35,18 +35,18 @@ function HomeScreen(){
   );
 }
 
-function SearchScreen(){
-  const { Navigator, Screen} = createStackNavigator();
+function SearchScreen() {
+  const { Navigator, Screen } = createStackNavigator();
 
   return (
     <Navigator
-      screenOptions={{headerShown: false}}
+      screenOptions={{ headerShown: false }}
     >
-      <Screen 
+      <Screen
         name="SearchAndPost"
         component={Search}
       />
-      <Screen 
+      <Screen
         name="Post"
         component={Post}
       />

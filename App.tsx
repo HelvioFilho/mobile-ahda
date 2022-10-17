@@ -1,6 +1,6 @@
 import 'intl';
 import 'intl/locale-data/jsonp/pt-BR';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, StatusBar } from 'react-native';
 import 'react-native-gesture-handler';
 
@@ -11,15 +11,18 @@ import {
   useFonts
 } from '@expo-google-fonts/roboto';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Notifications from 'expo-notifications';
+import SplashScreen from 'react-native-splash-screen';
 import { ThemeProvider } from 'styled-components';
 import { Load } from './src/components/Load';
 import theme from './src/global/styles/theme';
 import { Routes } from './src/routes';
+import { LoadingScreen } from './src/screens/LoadingScreen';
 import { appDataStore } from './src/services/store';
-import * as Notifications from 'expo-notifications';
-import SplashScreen from 'react-native-splash-screen';
+import { bible } from './src/services/api';
 
 const { ASYNC_KEY } = process.env;
+const { TOKEN_B } = process.env;
 
 export interface SettingsProps {
   name: string;
@@ -28,13 +31,14 @@ export interface SettingsProps {
 }
 
 export default function App() {
+  const [splash, setSplash] = useState(true);
   const [fontsLoaded] = useFonts({
     Roboto_400Regular,
     Roboto_500Medium,
     Roboto_700Bold,
   });
 
-  const { setStartSettings } = appDataStore();
+  const { setStartSettings, setBible } = appDataStore();
 
   async function permissions() {
     await Notifications.setNotificationHandler({
@@ -61,11 +65,46 @@ export default function App() {
     setStartSettings(settings);
   }
 
+  async function getBibleVerse() {
+    try {
+      const { data } = await bible.get('/verses/ra/random', {
+        headers: {
+          'Authorization': `Bearer ${TOKEN_B}`,
+        }
+      });
+      setBible({
+        book: data.book.name,
+        chapter: data.chapter,
+        number: data.number,
+        text: data.text
+      });
+    } catch (e) {
+      console.log(e.message);
+      setBible({
+        book: "Eclesiastes",
+        chapter: 9,
+        number: 10,
+        text: "Posso todas as coisas em Cristo que me fortalece."
+      });
+    }
+  }
+
   useEffect(() => {
     getData();
     permissions();
+    getBibleVerse();
     SplashScreen.hide();
   }, []);
+
+  if (splash) {
+    return (
+      <ThemeProvider theme={theme} >
+        <LoadingScreen
+          onFinish={() => setSplash(false)}
+        />
+      </ThemeProvider>
+    )
+  }
 
   return (
     <ThemeProvider theme={theme} >
