@@ -1,7 +1,17 @@
+import { RFValue } from 'react-native-responsive-fontsize';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Image } from 'react-native';
 import styled from 'styled-components/native';
 
-export const Container = styled.View`
+export const Container = styled(LinearGradient)`
   flex: 1;
   width: 100%;
-  background-color: ${({ theme }) => theme.colors.splash};
+`;
+
+export const CloudImage = styled(Image)`
+  position: absolute;
+  bottom: ${RFValue(20)}px;
+  left: ${RFValue(60)}px;
+  width: ${RFValue(300)}px;
+  height: ${RFValue(160)}px;
 `;
