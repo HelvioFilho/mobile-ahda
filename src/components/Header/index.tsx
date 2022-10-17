@@ -12,12 +12,19 @@ interface HeaderProps {
 export function Header({ animation }: HeaderProps) {
   const { width: displayWidth } = useWindowDimensions();
   const logoImageAnimation = useSharedValue(0);
+  const containerAnimation = useSharedValue(0);
   const titleAnimation = useSharedValue(displayWidth * 0.95);
 
-  const logoStyle = useAnimatedStyle(() => {
+  const LogoStyle = useAnimatedStyle(() => {
     return {
       opacity: logoImageAnimation.value
     }
+  });
+
+  const ContainerStyle = useAnimatedStyle(() => {
+      return {
+        opacity: containerAnimation.value
+      }
   });
 
   const TitleStyle = useAnimatedStyle(() => {
@@ -32,15 +39,16 @@ export function Header({ animation }: HeaderProps) {
 
   useEffect(() => {
     if (animation) {
+      containerAnimation.value = withTiming(1, { duration: 500});
       logoImageAnimation.value = withTiming(1, { duration: 4000 });
       titleAnimation.value = withTiming(0, { duration: 2000 });
     }
   }, [animation]);
 
   return (
-    <Container>
+    <Container style={ContainerStyle}>
       <Animated.View
-        style={logoStyle}
+        style={LogoStyle}
       >
         <Logo
           resizeMethod='resize'
