@@ -1,12 +1,12 @@
 import React from 'react';
-import { Image, StatusBar } from 'react-native';
+import { StatusBar } from 'react-native';
 import LottieView from 'lottie-react-native';
 
 import angel from '../../assets/angel.json';
 import cloud from '../../assets/cloud.png';
 
-import { CloudImage, Container } from './styles';
 import { useTheme } from 'styled-components';
+import { CloudImage, Container } from './styles';
 
 interface LoadingScreenProps {
   onFinish: () => void;
@@ -21,22 +21,22 @@ export function LoadingScreen({ onFinish }: LoadingScreenProps) {
       <StatusBar
         backgroundColor={theme.colors.tabBarColor.active}
         barStyle='dark-content'
-      />  
-        <LottieView
-          source={angel}
-          resizeMode="contain"
-          style={{
-            width: '90%',
-            height: '90%',
-            alignSelf: 'center',
-          }}
-          autoPlay
-          loop={false}
-          onAnimationFinish={onFinish}
-        />
-        <CloudImage
-          source={cloud}
-        />
+      />
+      <LottieView
+        source={angel}
+        resizeMode="contain"
+        style={{
+          width: '90%',
+          height: '90%',
+          alignSelf: 'center',
+        }}
+        autoPlay
+        loop={false}
+        onAnimationFinish={onFinish}
+      />
+      <CloudImage
+        source={cloud}
+      />
     </Container>
   );
 }
