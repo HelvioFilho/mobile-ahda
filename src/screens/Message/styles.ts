@@ -1,6 +1,7 @@
 import styled from 'styled-components/native';
-import { Image, TouchableOpacity } from 'react-native';
-import { RFValue } from 'react-native-responsive-fontsize';
+import { TouchableOpacity } from 'react-native';
+import Animated from 'react-native-reanimated';
+import { RFPercentage, RFValue } from 'react-native-responsive-fontsize';
 
 export const Container = styled.View`
   flex: 1;
@@ -9,15 +10,23 @@ export const Container = styled.View`
 
 export const ContainerImage = styled.View`
   position: relative;
-  top: 50px;
+  top: 20px;
   flex-direction: row;
   justify-content: space-between;
-  padding: 0 30px;
+  padding: 0 20px;
 `;
 
-export const MessageImage = styled(Image)`
+export const MessageImage = styled(Animated.Image)`
   width: ${RFValue(100)}px;
   height: ${RFValue(100)}px;
+`;
+
+export const AngelHalo = styled(Animated.Image)`
+  position: absolute;
+  top: ${RFValue(55)}px;
+  left: ${RFPercentage(16)}px;
+  width: ${RFValue(120)}px;
+  height: ${RFValue(40)}px;
 `;
 
 export const Title = styled.Text`
