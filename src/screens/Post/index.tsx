@@ -1,6 +1,6 @@
+import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { CaretLeft } from 'phosphor-react-native';
-import React, { useEffect, useState } from 'react';
 import { ScrollView, useWindowDimensions } from 'react-native';
 import RenderHTML from 'react-native-render-html';
 import { RFValue } from 'react-native-responsive-fontsize';
@@ -53,7 +53,7 @@ export function Post() {
   text = text.replace(/<p><img>/g, `<img`);
   text = text.replace(/"><\/p>/g, `">`);
   text = text.replace(/<p><br><\/p>/g, `<p style="margin: 15px 0"></p>`);
-  
+
   const tagsStyles = {
     h1: {
       margin: '5px 20px',
@@ -143,20 +143,23 @@ export function Post() {
             </ContainerGallery>
           }
           <Published>{`publicado em: ${day} às ${hour}`}</Published>
-          <Footer>
-            <ContainerAvatar>
-              <Avatar
-                source={{ uri: data.user.image }}
-              />
-              <Name>{data.user.name}</Name>
-            </ContainerAvatar>
-            {
-              !!data.user.about &&
-              <AboutWrapper>
-                <About>{data.user.about}</About>
-              </AboutWrapper>
-            }
-          </Footer>
+          {
+            data.user.name &&
+            <Footer>
+              <ContainerAvatar>
+                <Avatar
+                  source={{ uri: data.user.image }}
+                />
+                <Name>{data.user.name}</Name>
+              </ContainerAvatar>
+              {
+                !!data.user.about &&
+                <AboutWrapper>
+                  <About>{data.user.about}</About>
+                </AboutWrapper>
+              }
+            </Footer>
+          }
         </Container>
       </ScrollView>
       <BackButton

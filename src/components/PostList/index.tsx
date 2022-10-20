@@ -1,13 +1,21 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import { PostProps } from '../../screens/Home';
 import { appDataStore } from '../../services/store';
-import { useNavigation } from '@react-navigation/native';
 
-import {
-  Container, ContainerUser, Cover, Date, Preview, Separator, Title, User
-} from './styles';
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { useWindowDimensions } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import {
+  Container,
+  ContainerUser,
+  Cover,
+  Date,
+  Preview,
+  Separator,
+  Title,
+  User,
+  WithoutUser
+} from './styles';
 
 interface PostListProps {
   data: PostProps;
@@ -21,7 +29,7 @@ export function PostList({ data, animation }: PostListProps) {
   const { setData } = appDataStore();
   const { navigate } = useNavigation();
 
-  const {width: displayWidth} = useWindowDimensions();
+  const { width: displayWidth } = useWindowDimensions();
   const postOffset = useSharedValue(displayWidth * 1.20);
 
   const postStyle = useAnimatedStyle(() => {
@@ -46,10 +54,10 @@ export function PostList({ data, animation }: PostListProps) {
   }, []);
 
   useEffect(() => {
-    if(animation){
-      postOffset.value = withTiming(0, {duration: 1500});
+    if (animation) {
+      postOffset.value = withTiming(0, { duration: 1500 });
     }
-  },[animation]);
+  }, [animation]);
 
   return (
     <Animated.View style={[postStyle]}>
@@ -63,9 +71,14 @@ export function PostList({ data, animation }: PostListProps) {
           resizeMethod='resize'
           resizeMode='stretch'
         />
-        <ContainerUser>
-          <User numberOfLines={1} >Por: {data.user.name}</User>
-        </ContainerUser>
+        {
+          data.user.name ?
+            <ContainerUser>
+              <User numberOfLines={1} >Por: {data.user.name}</User>
+            </ContainerUser>
+            :
+            <WithoutUser />
+        }
         <Preview>{data.preview}</Preview>
         <Separator />
         <Date>publicado em: {newDate} às {newHour}</Date>
