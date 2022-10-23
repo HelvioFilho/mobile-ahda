@@ -1,3 +1,4 @@
+import Animated from 'react-native-reanimated';
 import { RFValue } from 'react-native-responsive-fontsize';
 import styled from 'styled-components/native';
 
@@ -32,7 +33,7 @@ export const SaveButton = styled.TouchableOpacity`
   background-color: ${({ theme }) => theme.colors.success};
 `;
 
-export const SwitchWrapper = styled.View`
+export const SwitchWrapper = styled(Animated.View)`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
@@ -44,7 +45,7 @@ export const TextSwitch = styled.Text`
   width: 80%;
 `;
 
-export const ContainerFooter = styled.View`
+export const ContainerFooter = styled(Animated.View)`
   position: absolute;
   width: 100%;
   height: 50px;
