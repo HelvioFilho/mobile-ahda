@@ -1,17 +1,9 @@
 import React from 'react';
 import { useTheme } from 'styled-components';
-import theme from '../../global/styles/theme';
 
-import { 
-  Container, 
-  ContainerModal,
-  Close,
-  IconX,
-  TitleAlert,
-  Message,
-  Footer,
-  Button,
-  Title
+import {
+  Button, Close, Container,
+  ContainerModal, Footer, IconX, Message, Title, TitleAlert
 } from './styles';
 
 interface WarningModalProps {
@@ -30,7 +22,7 @@ export function WarningModal(
     colorButton,
     closeModal
   }: WarningModalProps) {
-  
+
   const theme = useTheme();
 
   return (
@@ -39,7 +31,7 @@ export function WarningModal(
         <Close
           onPress={closeModal}
         >
-          <IconX 
+          <IconX
             name="md-close-circle"
             size={30}
             color={theme.colors.error}
@@ -55,7 +47,7 @@ export function WarningModal(
           {message}
         </Message>
         <Footer>
-          <Button 
+          <Button
             onPress={closeModal}
             color={colorButton}
           >
