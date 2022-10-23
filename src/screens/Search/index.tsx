@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   FlatList,
   Keyboard,
   KeyboardAvoidingView,
-  Platform, TouchableWithoutFeedback
+  Platform, TouchableWithoutFeedback, useWindowDimensions
 } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming
+} from 'react-native-reanimated';
 
 import { useTheme } from 'styled-components';
 import * as Yup from 'yup';
@@ -35,6 +40,7 @@ export function Search() {
   const [searchValue, setSearchValue] = useState('');
   const [isEmpty, setIsEmpty] = useState(false);
   const [animated, setAnimated] = useState(false);
+  const [animation, setAnimation] = useState(true);
 
   const size = 2;
   const values = {
@@ -42,6 +48,26 @@ export function Search() {
   }
 
   const theme = useTheme();
+  const { width: displayWidth } = useWindowDimensions();
+
+  const InputSearchAnimation = useSharedValue(displayWidth * 1);
+  const IconAnimation = useSharedValue(0);
+
+  const InputSearchStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateX: InputSearchAnimation.value
+        }
+      ]
+    }
+  });
+
+  const IconStyle = useAnimatedStyle(() => {
+    return {
+      opacity: IconAnimation.value
+    }
+  });
 
   const schema = Yup.object().shape({
     search: Yup
@@ -76,6 +102,18 @@ export function Search() {
       setAnimated(false);
     }
   }
+
+  useEffect(() => {
+    if (animation) {
+      InputSearchAnimation.value = withTiming(0,
+        { duration: 2000 },
+        () => {
+          IconAnimation.value = withTiming(1, { duration: 2000 });
+        }
+      );
+      setAnimation(false);
+    }
+  }, [animation]);
 
   return (
     <KeyboardAvoidingView
@@ -113,21 +151,25 @@ export function Search() {
                 const { search } = values;
                 return (
                   <ContainerForm>
-                    <InputField
-                      placeholder='Busca'
-                      label='Faça sua busca'
-                      onChangeText={handleChange('search')}
-                      onBlur={handleBlur('search')}
-                      error={touched.search && errors.search}
-                      value={search}
-                    >
-                      <SearchButton
-                        disabled={isSubmitting}
-                        onPress={handleSubmit}
+                    <Animated.View style={InputSearchStyle}>
+                      <InputField
+                        placeholder='Busca'
+                        label='Faça sua busca'
+                        onChangeText={handleChange('search')}
+                        onBlur={handleBlur('search')}
+                        error={touched.search && errors.search}
+                        value={search}
                       >
-                        <MagnifyingGlass size={28} color={theme.colors.light} />
-                      </SearchButton>
-                    </InputField>
+                        <SearchButton
+                          disabled={isSubmitting}
+                          onPress={handleSubmit}
+                        >
+                          <Animated.View style={IconStyle}>
+                            <MagnifyingGlass size={28} color={theme.colors.light} />
+                          </Animated.View>
+                        </SearchButton>
+                      </InputField>
+                    </Animated.View>
                   </ContainerForm>
                 )
               }
@@ -138,7 +180,7 @@ export function Search() {
             keyExtractor={item => item.id}
             renderItem={({ item }) => {
               return (
-                <PostList data={item} animation={animated}/>
+                <PostList data={item} animation={animated} />
               )
             }}
             onEndReached={() => {
