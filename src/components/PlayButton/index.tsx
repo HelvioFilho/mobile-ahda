@@ -9,7 +9,6 @@ import TrackPlayer, {
 import { useTheme } from 'styled-components';
 
 import PlayStop from '../../assets/play.json';
-import { appDataStore } from '../../services/store';
 import { Button, Container } from './styles';
 
 export function PlayButton() {
@@ -18,7 +17,6 @@ export function PlayButton() {
 
   const playbackState = usePlaybackState();
   const theme = useTheme();
-  const { statusPlayer, setStatusPlayer } = appDataStore();
   const animationPlayStop = useRef(null);
 
   async function setupPlayer() {
@@ -36,7 +34,6 @@ export function PlayButton() {
         compactCapabilities: [Capability.Play, Capability.Pause],
         notificationCapabilities: [Capability.Play, Capability.Pause],
       });
-      setStatusPlayer(true);
     } catch (e) {
       console.log(e);
     }
@@ -50,14 +47,12 @@ export function PlayButton() {
         playbackState === State.Ready
       ) {
         try {
-          animationPlayStop.current.play(24, 0);
           await TrackPlayer.play();
         } catch (e) {
           console.log(e);
         }
       } else {
         try {
-          animationPlayStop.current.play(0, 24);
           await TrackPlayer.pause();
         } catch (e) {
           console.log(e);
@@ -67,19 +62,18 @@ export function PlayButton() {
   }
 
   useEffect(() => {
-    if (statusPlayer === false) {
+
+    if (!!playbackState) {
+      if (playbackState === State.Playing) {
+        animationPlayStop.current.play(24, 0);
+      } else {
+        animationPlayStop.current.play(0, 24);
+      }
+    } else {
+      animationPlayStop.current.play(0, 0);
       setupPlayer();
     }
-    if (playbackState === State.Playing) {
-      animationPlayStop.current.play(0, 0);
-    } else {
-      animationPlayStop.current.play(24, 24);
-    }
-
-    return () => {
-      setStatusPlayer(false);
-    }
-  }, []);
+  }, [playbackState]);
 
   return (
     <Container
@@ -103,7 +97,7 @@ export function PlayButton() {
           resizeMode="contain"
           loop={false}
           autoPlay={false}
-          onAnimationFinish={() => setLoading(false)}    
+          onAnimationFinish={() => setLoading(false)}
         />
       </Button>
     </Container>
