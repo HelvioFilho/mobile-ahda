@@ -1,6 +1,7 @@
+import styled from 'styled-components/native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { Dimensions } from 'react-native';
-import styled from 'styled-components/native';
+import FastImage from 'react-native-fast-image';
 
 export const Container = styled.View`
   width: 100%;
@@ -20,7 +21,7 @@ export const ImageWrapper = styled.View`
   padding: 10px 20px;
 `;
 
-export const PostImage = styled.Image`
+export const PostImage = styled(FastImage)`
   width: 100%;
   height: ${RFValue(380)}px;
 `;

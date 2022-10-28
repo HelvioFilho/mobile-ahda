@@ -1,6 +1,7 @@
-import { Dimensions } from 'react-native';
-import { RFValue } from 'react-native-responsive-fontsize';
 import styled from 'styled-components/native';
+import { Dimensions } from 'react-native';
+import FastImage from 'react-native-fast-image';
+import { RFValue } from 'react-native-responsive-fontsize';
 
 export const Container = styled.View`
   position: relative;
@@ -24,7 +25,7 @@ export const CoverWrapper = styled.View`
   align-items: center;
 `;
 
-export const Cover = styled.Image`
+export const Cover = styled(FastImage)`
   width: 100%;
   height: ${RFValue(300)}px;
 `;
@@ -64,7 +65,7 @@ export const ContainerAvatar = styled.View`
   margin: 20px 20px 15px ;
 `;
 
-export const Avatar = styled.Image`
+export const Avatar = styled(FastImage)`
   width: 60px;
   height: 60px;
   border-radius: 25px;

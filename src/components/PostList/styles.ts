@@ -1,5 +1,6 @@
 import styled from 'styled-components/native';
 import { RFPercentage, RFValue } from 'react-native-responsive-fontsize';
+import FastImage from 'react-native-fast-image';
 
 export const Container = styled.TouchableOpacity`
   width: 100%;
@@ -17,7 +18,7 @@ export const Title = styled.Text`
   text-align: center;
 `;
 
-export const Cover = styled.Image`
+export const Cover = styled(FastImage)`
   width: 100%;
   height: 250px;
 `;
