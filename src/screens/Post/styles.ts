@@ -3,10 +3,14 @@ import { Dimensions } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { RFValue } from 'react-native-responsive-fontsize';
 
+interface CoverProps {
+  height: number;
+}
+
 export const Container = styled.View`
   position: relative;
   width: 100%;
-  top: -40px;
+  top: -110px;
   border-top-right-radius: 60px;
   border-top-left-radius: 60px;
   background-color: ${({ theme }) => theme.colors.light};
@@ -25,9 +29,10 @@ export const CoverWrapper = styled.View`
   align-items: center;
 `;
 
-export const Cover = styled(FastImage)`
+export const Cover = styled(FastImage)<CoverProps>`
   width: 100%;
-  height: ${RFValue(300)}px;
+  height: ${({height}) => RFValue(height)}px;
+  /* height: ${RFValue(300)}px; */
 `;
 
 export const ContainerRender = styled.View`
@@ -43,7 +48,7 @@ export const TitleGallery = styled.Text`
   text-align: center;
   font-family: ${({ theme}) => theme.fonts.Bold};
   font-size: ${RFValue(26)}px;
-  padding: 0 20px 15px;
+  padding: 0 20px 0;
 `;
 
 export const Published = styled.Text`

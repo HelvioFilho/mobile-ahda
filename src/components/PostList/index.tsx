@@ -68,7 +68,6 @@ export function PostList({ data, animation }: PostListProps) {
         <Title>{data.title}</Title>
         <Cover
           source={{ uri: data.cover }}
-          resizeMethod='resize'
           resizeMode='stretch'
         />
         {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { CaretLeft } from 'phosphor-react-native';
-import { ScrollView, useWindowDimensions } from 'react-native';
+import { Dimensions, Image, ScrollView, useWindowDimensions } from 'react-native';
 import RenderHTML from 'react-native-render-html';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { useTheme } from 'styled-components';
@@ -94,6 +94,9 @@ export function Post() {
   };
 
   const [imageGallery, setImageGallery] = useState<GalleryProps[]>([]);
+  const [maxHeight, setMaxHeight] = useState(0);
+
+  const { width: displayWidth } = Dimensions.get('window');
 
   async function getImageGallery(id: string) {
     try {
@@ -108,8 +111,15 @@ export function Post() {
     }
   }
 
+  async function getMaxHeight(){
+    await Image.getSize(data.cover, (width, height) => {
+      setMaxHeight((displayWidth * height) / width)
+    });
+  }
+
   useEffect(() => {
     getImageGallery(data.id);
+    getMaxHeight();
   }, []);
 
   return (
@@ -119,9 +129,9 @@ export function Post() {
       >
         <CoverWrapper>
           <Cover
+            height={maxHeight}
             source={{ uri: data.cover }}
             resizeMode='stretch'
-            resizeMethod='scale'
           />
         </CoverWrapper>
         <Container>
