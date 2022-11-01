@@ -14,10 +14,11 @@ export const Container = styled.View`
   border-top-right-radius: 60px;
   border-top-left-radius: 60px;
   background-color: ${({ theme }) => theme.colors.light};
+  margin-bottom: -50px;
 `;
 
 export const Title = styled.Text`
-  font-family: ${({ theme}) => theme.fonts.Bold};
+  font-family: ${({ theme }) => theme.fonts.Bold};
   font-size: ${RFValue(26)}px;
   text-align: center;
   margin: 15px 25px 0;
@@ -29,9 +30,9 @@ export const CoverWrapper = styled.View`
   align-items: center;
 `;
 
-export const Cover = styled(FastImage)<CoverProps>`
+export const Cover = styled(FastImage) <CoverProps>`
   width: 100%;
-  height: ${({height}) => RFValue(height)}px;
+  height: ${({ height }) => RFValue(height)}px;
   /* height: ${RFValue(300)}px; */
 `;
 
@@ -46,14 +47,14 @@ export const ContainerGallery = styled.View`
 
 export const TitleGallery = styled.Text`
   text-align: center;
-  font-family: ${({ theme}) => theme.fonts.Bold};
+  font-family: ${({ theme }) => theme.fonts.Bold};
   font-size: ${RFValue(26)}px;
   padding: 0 20px 0;
 `;
 
 export const Published = styled.Text`
   text-align: center;
-  font-family: ${({ theme}) => theme.fonts.Regular};
+  font-family: ${({ theme }) => theme.fonts.Regular};
   font-size: ${RFValue(12)}px;
 `;
 
@@ -67,7 +68,7 @@ export const Footer = styled.View`
 export const ContainerAvatar = styled.View`
   flex-direction: row;
   margin-bottom: 10px;
-  margin: 20px 20px 15px ;
+  margin: 20px 20px 15px;
 `;
 
 export const Avatar = styled(FastImage)`
@@ -78,7 +79,7 @@ export const Avatar = styled(FastImage)`
 `;
 
 export const Name = styled.Text`
-  font-family: ${({ theme}) => theme.fonts.Medium};
+  font-family: ${({ theme }) => theme.fonts.Medium};
   font-size: ${RFValue(14)}px;
   align-self: center;
 `;
@@ -91,7 +92,7 @@ export const AboutWrapper = styled.View`
 `;
 
 export const About = styled.Text`
-  font-family: ${({ theme}) => theme.fonts.Regular};
+  font-family: ${({ theme }) => theme.fonts.Regular};
   font-size: ${RFValue(14)}px;  
 `;
 

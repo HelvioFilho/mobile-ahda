@@ -135,9 +135,12 @@ export function Home() {
               }
             />
             :
-            <ContainerWarn>
-              <TextWarn>Ainda não há publicações.</TextWarn>
-            </ContainerWarn>
+            <>
+              <Header animation={animated} />
+              <ContainerWarn>
+                <TextWarn>Ainda não há publicações.</TextWarn>
+              </ContainerWarn>
+            </>
       }
       <Modal
         animationType="fade"

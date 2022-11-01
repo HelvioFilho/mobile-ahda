@@ -17,6 +17,8 @@ export const ImageWrapper = styled.View<PostImageProps>`
   justify-content: center;
   align-items: center;
   padding: 0px 10px;
+  margin-top: 10px;
+  margin-bottom: 15px;
 `;
 
 export const PostImage = styled(FastImage)`
