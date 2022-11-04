@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { CaretLeft } from 'phosphor-react-native';
+import { MaterialIcons } from '@expo/vector-icons';
 import { Dimensions, Image, ScrollView, useWindowDimensions } from 'react-native';
 import RenderHTML from 'react-native-render-html';
 import { RFValue } from 'react-native-responsive-fontsize';
@@ -176,7 +176,8 @@ export function Post() {
         activeOpacity={0.8}
         onPress={goBack}
       >
-        <CaretLeft
+        <MaterialIcons 
+          name='keyboard-arrow-left'
           size={20}
           color={theme.colors.light}
         />

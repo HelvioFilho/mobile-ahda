@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Formik } from 'formik';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -9,12 +8,15 @@ import {
   TouchableWithoutFeedback,
   useWindowDimensions
 } from 'react-native';
-import Animated, { 
-  Easing, 
-  useAnimatedStyle, 
-  useSharedValue, 
-  withTiming 
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming
 } from 'react-native-reanimated';
+
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
 import * as Yup from 'yup';
 
 import AngelHaloImage from '../../assets/angelHalo.png';
@@ -23,7 +25,7 @@ import SendRight from '../../assets/send-right.png';
 
 import { useFocusEffect } from '@react-navigation/native';
 import { useTheme } from 'styled-components';
-import { InputField } from '../../components/InputField';
+import { InputMessage } from '../../components/InputMessage';
 import { Load } from '../../components/Load';
 import { WarningModal } from '../../components/WarningModal';
 import { api } from '../../services/api';
@@ -48,7 +50,7 @@ interface WarningProps {
   color: string;
 }
 
-interface DefaultValueProps {
+interface DataForm {
   name: string;
   email: string;
   message: string;
@@ -59,8 +61,9 @@ export function Message() {
   const [inputHeight, setInputHeight] = useState(50);
   const [visible, setVisible] = useState(false);
   const [warning, setWarning] = useState<WarningProps>({} as WarningProps);
-  const [val, setVal] = useState<DefaultValueProps>({} as DefaultValueProps);
   const [animation, setAnimation] = useState(true);
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const theme = useTheme();
   const { startSettings } = appDataStore();
@@ -179,6 +182,53 @@ export function Message() {
       .required('Nome não pode ser vazio!')
   });
 
+  const {
+    control,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors }
+  } = useForm({
+    resolver: yupResolver(schema)
+  });
+
+  async function handleSendMessage(form: Partial<DataForm>) {
+    setIsSubmitting(true);
+    api.post('set_message', {
+      name: form.name,
+      email: form.email,
+      message: form.message,
+      key: KEY,
+    }).then(({ data }) => {
+      let message, height = 170;
+      if (data.error) {
+        if (data.message) {
+          message = data.message ?
+            data.message :
+            'Algo deu errado e sua mensagem não pode ser enviada, por favor tente novamente mais tarde';
+          height = 210;
+        }
+      } else {
+        message = 'Mensagem enviada com sucesso!';
+        reset();
+      }
+      setWarning({
+        height,
+        message,
+        color: theme.colors.error
+      });
+    }).catch((e) => {
+      setWarning({
+        height: 210,
+        message: 'Algo deu errado e o servidor não respondeu, se o erro persistir, entre em contato com o desenvolvedor do aplicativo!',
+        color: theme.colors.error
+      });
+    }).finally(() => {
+      setIsSubmitting(false);
+      setVisible(true);
+    });
+  }
+
   useEffect(() => {
     if (animation) {
       MessageOpacityAnimation.value = withTiming(1, { duration: 1000 });
@@ -196,11 +246,10 @@ export function Message() {
   }, [animation]);
 
   useFocusEffect(useCallback(() => {
-    setVal({
-      name: startSettings.name ? startSettings.name : '',
-      email: startSettings.email ? startSettings.email : '',
-      message: '',
-    });
+
+    setValue("name", startSettings.name ? startSettings.name : '');
+    setValue("email", startSettings.email ? startSettings.email : '');
+
   }, [startSettings]));
 
   return (
@@ -237,123 +286,59 @@ export function Message() {
             >
               <SubTitle>Suas mensagens podem ser lidas no programa, esse é o seu contato direto com A hora do anjo, então nos escreva!</SubTitle>
             </Animated.View>
-            <Formik
-              enableReinitialize={true}
-              initialValues={val}
-              validationSchema={schema}
-              onSubmit={
-                (values, formikActions) => {
-
-                  api.post('set_message', {
-                    name: values.name,
-                    email: values.email,
-                    message: values.message,
-                    key: KEY,
-                  }).then(({ data }) => {
-                    let message, height = 170;
-                    if (data.error) {
-                      if (data.message) {
-                        message = data.message ?
-                          data.message :
-                          'Algo deu errado e sua mensagem não pode ser enviada, por favor tente novamente mais tarde';
-                        height = 210;
-                      }
-                    } else {
-                      message = 'Mensagem enviada com sucesso!';
-                      formikActions.resetForm();
-                    }
-                    setWarning({
-                      height,
-                      message,
-                      color: theme.colors.error
-                    });
-                  }).catch((e) => {
-                    setWarning({
-                      height: 210,
-                      message: 'Algo deu errado e o servidor não respondeu, se o erro persistir, entre em contato com o desenvolvedor do aplicativo!',
-                      color: theme.colors.error
-                    });
-                  }).finally(() => {
-                    formikActions.setSubmitting(false);
-                    setVisible(true);
-                  });
-                }
-              }
-            >
-              {
-                (
+            <ContainerForm>
+              <Animated.View
+                style={InputNameStyle}
+              >
+                <InputMessage
+                  placeholder='Nome'
+                  label='Nome'
+                  name='name'
+                  control={control}
+                  autoCorrect={false}
+                  error={errors.name && errors.name.message as string}
+                />
+              </Animated.View>
+              <Animated.View
+                style={InputEmailStyle}
+              >
+                <InputMessage
+                  placeholder='E-mail'
+                  label='E-mail (Opcional)'
+                  name='email'
+                  control={control}
+                  error={errors.email && errors.email.message as string}
+                  autoCapitalize='none'
+                  keyboardType='email-address'
+                />
+              </Animated.View>
+              <Animated.View
+                style={InputMessageStyle}
+              >
+                <InputMessage
+                  placeholder='Sua mensagem'
+                  label='Mensagem'
+                  name='message'
+                  control={control}
+                  changeHeight={inputHeight}
+                  error={errors.message && errors.message.message as string}
+                  multiline={true}
+                  onContentSizeChange={(e) => setInputHeight(e.nativeEvent.contentSize.height + 30)}
+                />
+              </Animated.View>
+              <Animated.View
+                style={ButtonStyle}
+              >
+                <ContainerButton disabled={isSubmitting} onPress={handleSubmit(handleSendMessage)}>
                   {
-                    values,
-                    errors,
-                    touched,
-                    handleChange,
-                    handleBlur,
-                    handleSubmit,
-                    isSubmitting,
-                  }: any) => {
+                    isSubmitting ?
+                      <Load size={24} player={true} /> :
+                      <ButtonText>Enviar</ButtonText>
 
-                  const { name, email, message } = values;
-
-                  return (
-                    <ContainerForm>
-                      <Animated.View
-                        style={InputNameStyle}
-                      >
-                        <InputField
-                          placeholder='Nome'
-                          label='Nome'
-                          onChangeText={handleChange('name')}
-                          onBlur={handleBlur('name')}
-                          error={touched.name && errors.name}
-                          value={name}
-                        />
-                      </Animated.View>
-                      <Animated.View
-                        style={InputEmailStyle}
-                      >
-                        <InputField
-                          placeholder='E-mail'
-                          label='E-mail (Opcional)'
-                          onChangeText={handleChange('email')}
-                          onBlur={handleBlur('email')}
-                          error={touched.email && errors.email}
-                          value={email}
-                          autoCapitalize='none'
-                          keyboardType='email-address'
-                        />
-                      </Animated.View>
-                      <Animated.View
-                        style={InputMessageStyle}
-                      >
-                        <InputField
-                          placeholder='Sua mensagem'
-                          label='Mensagem'
-                          changeHeight={inputHeight}
-                          onChangeText={handleChange('message')}
-                          onBlur={handleBlur('message')}
-                          error={touched.message && errors.message}
-                          value={message}
-                          multiline={true}
-                          onContentSizeChange={(e) => setInputHeight(e.nativeEvent.contentSize.height + 30)}
-                        />
-                      </Animated.View>
-                      <Animated.View
-                        style={ButtonStyle}
-                      >
-                        <ContainerButton disabled={isSubmitting} onPress={handleSubmit}>
-                          {
-                            isSubmitting ?
-                              <Load size={24} player={true} /> :
-                              <ButtonText>Enviar</ButtonText>
-
-                          }
-                        </ContainerButton>
-                      </Animated.View>
-                    </ContainerForm>
-                  )
-                }
-              }
-            </Formik>
+                  }
+                </ContainerButton>
+              </Animated.View>
+            </ContainerForm>
             <Modal
               animationType='fade'
               transparent

@@ -16,6 +16,7 @@ export const SearchButton = styled.TouchableOpacity`
   top: 0;
   left: 20px;
   padding: 11px;
+  height: 50px;
   border-left-width: 4px;
   border-left-color: ${({ theme }) => theme.colors.background};
   background-color: ${({ theme }) => theme.colors.success};

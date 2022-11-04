@@ -1,7 +1,7 @@
+import styled from 'styled-components/native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Image } from 'react-native';
-import styled from 'styled-components/native';
 
 export const Container = styled(LinearGradient)`
   flex: 1;

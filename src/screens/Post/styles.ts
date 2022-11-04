@@ -33,7 +33,6 @@ export const CoverWrapper = styled.View`
 export const Cover = styled(FastImage) <CoverProps>`
   width: 100%;
   height: ${({ height }) => RFValue(height)}px;
-  /* height: ${RFValue(300)}px; */
 `;
 
 export const ContainerRender = styled.View`

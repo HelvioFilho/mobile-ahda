@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { FloppyDisk } from 'phosphor-react-native';
 import {
   Keyboard,
   KeyboardAvoidingView, Modal, Platform,
@@ -11,6 +10,8 @@ import Animated, {
   withTiming
 } from 'react-native-reanimated';
 
+import { Entypo } from '@expo/vector-icons';
+
 import * as Notifications from 'expo-notifications';
 import * as Yup from 'yup';
 import { InputField } from '../../components/InputField';
@@ -18,10 +19,9 @@ import { InputField } from '../../components/InputField';
 import { useTheme } from 'styled-components';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { SettingsProps } from '../../../App';
 import { Load } from '../../components/Load';
 import { WarningModal } from '../../components/WarningModal';
-import { appDataStore } from '../../services/store';
+import { appDataStore, SettingsProps } from '../../services/store';
 import {
   ButtonAbout,
   Container,
@@ -297,7 +297,7 @@ export function Settings() {
                 >
                   {
                     !isSubmittingName ?
-                      <FloppyDisk size={28} color={theme.colors.light} /> :
+                      <Entypo name='save' size={28} color={theme.colors.light} /> :
                       <Load size={20} player={true} />
                   }
                 </SaveButton>
@@ -330,7 +330,7 @@ export function Settings() {
                 >
                   {
                     !isSubmittingEmail ?
-                      <FloppyDisk size={28} color={theme.colors.light} /> :
+                    <Entypo name='save' size={28} color={theme.colors.light} /> :
                       <Load size={20} player={true} />
                   }
                 </SaveButton>

@@ -12,16 +12,16 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { useTheme } from 'styled-components';
-import * as Yup from 'yup';
+import { api } from '../../services/api';
 
-import { Formik } from 'formik';
-import { MagnifyingGlass } from 'phosphor-react-native';
+import * as Yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
+
+import { Ionicons, MaterialCommunityIcons, EvilIcons } from '@expo/vector-icons';
 import { Load } from '../../components/Load';
 import { PostList } from '../../components/PostList';
 import { PostProps } from '../Home';
-
-import { InputField } from '../../components/InputField';
-import { api } from '../../services/api';
 import {
   Container,
   ContainerForm,
@@ -29,23 +29,26 @@ import {
   ContainerWarning,
   TextWarning
 } from './styles';
+import { InputMessage } from '../../components/InputMessage';
 
 const { KEY } = process.env;
+
+interface DataForm {
+  search: string;
+}
 
 export function Search() {
   const [totalPage, setTotalPage] = useState(1);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [post, setPost] = useState<PostProps[]>([]);
+  const [isSearch, setIsSearch] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [isEmpty, setIsEmpty] = useState(false);
   const [animated, setAnimated] = useState(false);
   const [animation, setAnimation] = useState(true);
 
   const size = 2;
-  const values = {
-    search: ''
-  }
 
   const theme = useTheme();
   const { width: displayWidth } = useWindowDimensions();
@@ -76,6 +79,24 @@ export function Search() {
       .min(5, 'A busca precisa ter mais que 4 caracteres!')
       .required('O campo de busca não pode ser vazio!')
   });
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({
+    resolver: yupResolver(schema)
+  });
+
+  async function handleSearch(form: Partial<DataForm>) {
+    setIsSearch(true);
+    const formPage = page > 1 ? 1 : page;
+    setIsEmpty(false);
+    setPage(formPage);
+    setSearchValue(form.search);
+    getPosts(form.search, formPage);
+    setIsSearch(false);
+  }
 
   async function getPosts(search: string, setPage: number) {
     try {
@@ -123,58 +144,26 @@ export function Search() {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <Container>
-          <Formik
-            initialValues={values}
-            validationSchema={schema}
-            onSubmit={
-              (values, formikActions) => {
-                const formPage = page > 1 ? 1 : page;
-                setIsEmpty(false);
-                setPage(formPage);
-                setSearchValue(values.search);
-                getPosts(values.search, formPage);
-                formikActions.setSubmitting(false);
-              }
-            }
-          >
-            {
-              (
-                {
-                  values,
-                  errors,
-                  touched,
-                  handleChange,
-                  handleBlur,
-                  handleSubmit,
-                  isSubmitting,
-                }: any) => {
-                const { search } = values;
-                return (
-                  <ContainerForm>
-                    <Animated.View style={InputSearchStyle}>
-                      <InputField
-                        placeholder='Busca'
-                        label='Faça sua busca'
-                        onChangeText={handleChange('search')}
-                        onBlur={handleBlur('search')}
-                        error={touched.search && errors.search}
-                        value={search}
-                      >
-                        <SearchButton
-                          disabled={isSubmitting}
-                          onPress={handleSubmit}
-                        >
-                          <Animated.View style={IconStyle}>
-                            <MagnifyingGlass size={28} color={theme.colors.light} />
-                          </Animated.View>
-                        </SearchButton>
-                      </InputField>
-                    </Animated.View>
-                  </ContainerForm>
-                )
-              }
-            }
-          </Formik>
+          <ContainerForm>
+            <Animated.View style={InputSearchStyle}>
+              <InputMessage
+                placeholder='Busca'
+                label='Faça sua busca'
+                control={control}
+                name='search'
+                error={errors.search && errors.search.message as string}
+              >
+                <SearchButton
+                  disabled={isSearch}
+                  onPress={handleSubmit(handleSearch)}
+                >
+                  <Animated.View style={IconStyle}>
+                    <MaterialCommunityIcons name='magnify' size={28} color={theme.colors.light} />
+                  </Animated.View>
+                </SearchButton>
+              </InputMessage>
+            </Animated.View>
+          </ContainerForm>
           <FlatList
             data={post}
             keyExtractor={item => item.id}
