@@ -1,4 +1,3 @@
-import React from "react";
 import { NavigationContainer } from '@react-navigation/native';
 import { BottomRoute } from "./app.routes";
 

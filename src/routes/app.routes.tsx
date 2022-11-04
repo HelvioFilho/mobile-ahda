@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
+import { Ionicons, MaterialCommunityIcons, EvilIcons } from '@expo/vector-icons';
+
 import { createStackNavigator } from '@react-navigation/stack';
-import { EnvelopeSimple, Gear, House, MagnifyingGlass } from 'phosphor-react-native';
 import { Keyboard } from 'react-native';
 import { useTheme } from 'styled-components';
 import { PlayButton } from '../components/PlayButton';
@@ -96,7 +97,14 @@ export function BottomRoute() {
         component={HomeScreen}
         options={{
           tabBarIcon: ({ focused, color }) => (
-            <House size={33} color={color} weight={focused ? 'fill' : 'regular'} />
+            <>
+              {
+                focused ?
+                  <Ionicons name='md-home-sharp' size={30} color={color} />
+                  :
+                  <Ionicons name='md-home-outline' size={30} color={color} />
+              }
+            </>
           )
         }}
       />
@@ -106,7 +114,7 @@ export function BottomRoute() {
         component={SearchScreen}
         options={{
           tabBarIcon: ({ color }) => (
-            <MagnifyingGlass size={30} color={color} weight='regular' />
+            <MaterialCommunityIcons name='magnify' size={33} color={color} />
           ),
           tabBarHideOnKeyboard: true,
         }}
@@ -126,7 +134,8 @@ export function BottomRoute() {
         component={Message}
         options={{
           tabBarIcon: ({ color }) => (
-            <EnvelopeSimple size={32} color={color} weight='regular' />
+            // <EnvelopeSimple size={32} color={color} />
+            <EvilIcons name='envelope' size={37} color={color} />
           ),
           tabBarHideOnKeyboard: true,
         }}
@@ -136,7 +145,14 @@ export function BottomRoute() {
         component={Settings}
         options={{
           tabBarIcon: ({ focused, color }) => (
-            <Gear size={32} color={color} weight={focused ? 'fill' : 'regular'} />
+            <>
+              {
+                focused ?
+                  <Ionicons name='ios-settings' size={30} color={color} />
+                  :
+                  <Ionicons name='ios-settings-outline' size={30} color={color} />
+              }
+            </>
           ),
           tabBarHideOnKeyboard: true,
         }}
