@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import LottieView from 'lottie-react-native';
 import TrackPlayer, {
-  Capability,
   State,
   usePlaybackState
 } from 'react-native-track-player';
@@ -10,39 +9,24 @@ import { useTheme } from 'styled-components';
 
 import PlayStop from '../../assets/play.json';
 import { Button, Container } from './styles';
+import { Modal } from 'react-native';
+import { WarningModal } from '../WarningModal';
 
 export function PlayButton() {
-  const urlRadio = "https://s18.maxcast.com.br:8707/live";
   const [loading, setLoading] = useState(false);
+  const [checkStatus, setCheckStatus] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   const playbackState = usePlaybackState();
   const theme = useTheme();
   const animationPlayStop = useRef(null);
 
-  async function setupPlayer() {
-    try {
-      await TrackPlayer.setupPlayer({});
-      await TrackPlayer.add({
-        url: urlRadio,
-        artwork: require('../../assets/angel-blue.png'),
-        title: 'Rádio A Hora do Anjo',
-        artist: 'De segunda à sexta de 18h às 19h'
-      });
-      await TrackPlayer.updateOptions({
-        stopWithApp: true,
-        capabilities: [Capability.Play, Capability.Pause],
-        compactCapabilities: [Capability.Play, Capability.Pause],
-        notificationCapabilities: [Capability.Play, Capability.Pause],
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
   async function togglePlayback(playbackState) {
     const currentTrack = await TrackPlayer.getCurrentTrack();
+    
     if (currentTrack !== null) {
       setLoading(true);
+      setCheckStatus(true);
       if (playbackState === State.Paused ||
         playbackState === State.Ready
       ) {
@@ -62,16 +46,20 @@ export function PlayButton() {
   }
 
   useEffect(() => {
-
-    if (!!playbackState) {
-      if (playbackState === State.Playing) {
-        animationPlayStop.current.play(24, 0);
-      } else {
-        animationPlayStop.current.play(0, 24);
+    if(checkStatus){
+      if (playbackState === State.None) {
+        setVisible(true);
+        setLoading(false);
+        setCheckStatus(false);
       }
+    }
+  },[checkStatus]);
+
+  useEffect(() => {
+    if (playbackState === State.Playing) {
+      animationPlayStop.current.play(24, 0);
     } else {
-      animationPlayStop.current.play(0, 0);
-      setupPlayer();
+      animationPlayStop.current.play(0, 24);
     }
   }, [playbackState]);
 
@@ -100,6 +88,21 @@ export function PlayButton() {
           onAnimationFinish={() => setLoading(false)}
         />
       </Button>
+      <Modal
+            animationType='fade'
+            transparent
+            visible={visible}
+            onRequestClose={() => setVisible(false)}
+            hardwareAccelerated={true}
+          >
+            <WarningModal
+              title='Aviso'
+              height={220}
+              message={"A rádio encontra-se, momentaneamente, fora do ar. \nSentimos muito pelo inconveniente, em breve tudo voltará ao normal!"}
+              colorButton={theme.colors.error}
+              closeModal={() => setVisible(false)}
+            />
+          </Modal>
     </Container>
   );
 }

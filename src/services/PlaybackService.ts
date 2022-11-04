@@ -1,4 +1,4 @@
-import TrackPlayer, {Event, State} from "react-native-track-player";
+import TrackPlayer, { Event } from "react-native-track-player";
 
 export async function PlaybackService() {
   TrackPlayer.addEventListener(Event.RemotePause, () => {

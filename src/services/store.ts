@@ -1,12 +1,17 @@
 import create from 'zustand';
-import { SettingsProps } from '../../App';
 import { PostProps } from '../screens/Home';
 
-interface DataBibleProps {
+export interface DataBibleProps {
   book: string;
   chapter: number;
   number: number;
   text: string;
+}
+
+export interface SettingsProps {
+  name: string;
+  email: string;
+  notification: boolean;
 }
 
 interface ZustandProps {
