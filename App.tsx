@@ -16,12 +16,16 @@ import { Routes } from './src/routes';
 import { LoadingScreen } from './src/screens/LoadingScreen';
 import { SetupNotifications, SetupStartSettings, SetupTrackPlayer } from './src/services/Setup';
 import { appDataStore } from './src/services/store';
+import { useNetInfo } from '@react-native-community/netinfo';
+import { NoConnected } from './src/screens/NoConnected';
+import { Settings } from './src/screens/Settings';
 
 export default function App() {
 
   const [splash, setSplash] = useState(true);
   const [player, setPlayer] = useState(false);
   const [notification, setNotification] = useState(false);
+  const netInfo = useNetInfo();
 
   const [fontsLoaded] = useFonts({
     Roboto_400Regular,
@@ -32,9 +36,11 @@ export default function App() {
   const { setBible, setStartSettings } = appDataStore();
 
   async function getSetup() {
+
     const isPlayer = await SetupTrackPlayer("https://s18.maxcast.com.br:8707/live");
     const isNotification = await SetupNotifications();
     const isSettings = await SetupStartSettings();
+
     if (!!isSettings.bible.book) {
       setBible({
         ...isSettings.bible
@@ -83,7 +89,13 @@ export default function App() {
           backgroundColor={theme.colors.background}
           barStyle='dark-content'
         />
-        {fontsLoaded ? <Routes /> : <Load size={35} />}
+        { 
+          netInfo.isConnected ?
+          fontsLoaded ? 
+          <Routes /> : 
+          <Load size={35} /> :
+          <NoConnected />
+        }
       </SafeAreaView>
     </ThemeProvider>
   );
