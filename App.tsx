@@ -18,7 +18,6 @@ import { SetupNotifications, SetupStartSettings, SetupTrackPlayer } from './src/
 import { appDataStore } from './src/services/store';
 import { useNetInfo } from '@react-native-community/netinfo';
 import { NoConnected } from './src/screens/NoConnected';
-import { Settings } from './src/screens/Settings';
 
 export default function App() {
 

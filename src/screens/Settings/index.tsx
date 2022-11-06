@@ -34,6 +34,7 @@ import {
   Title
 } from './styles';
 import { About } from '../../components/About';
+import { VerifyNotifications } from '../../services/Setup';
 
 const { ASYNC_KEY } = process.env;
 
@@ -193,37 +194,50 @@ export function Settings() {
   async function handleChangedNotification() {
     try {
       const isNotification = !notification;
-      setNotification(isNotification);
-      setDataStorage({
-        name,
-        email,
-        notification: isNotification,
-      });
+
       if (isNotification) {
-        const days = [2, 3, 4, 5, 6];
-        await Promise.all(days.map(async (day) => {
-          await Notifications.scheduleNotificationAsync({
-            identifier: `program${day}`,
-            content: {
-              title: 'A hora do anjo',
-              body: 'O programa começará em 5 minutos.',
-              sound: 'default',
-              priority: Notifications.AndroidNotificationPriority.HIGH,
-            },
-            trigger: {
-              hour: 17,
-              minute: 55,
-              weekday: day,
-              repeats: true
-            }
+        const hasPermission = await VerifyNotifications();
+        if (hasPermission) {
+          try {
+            const days = [2, 3, 4, 5, 6];
+            await Promise.all(days.map(async (day) => {
+              await Notifications.scheduleNotificationAsync({
+                identifier: `program${day}`,
+                content: {
+                  title: 'A hora do anjo',
+                  body: 'O programa começará em 5 minutos.',
+                  priority: Notifications.AndroidNotificationPriority.HIGH,
+                },
+                trigger: {
+                  hour: 21,
+                  minute: 0,
+                  weekday: day,
+                  repeats: true
+                }
+              });
+            }));
+            setWarning({
+              height: 200,
+              message: "As notificações foram ativadas, agora você será alertado antes do programa começar!",
+              color: theme.colors.error
+            });
+            setVisible(true);
+          }catch (e) {
+            setWarning({
+              height: 200,
+              message: "Algo deu errado e não foi possível ativar a notificação!",
+              color: theme.colors.error
+            });
+            setVisible(true);
+          }
+        } else {
+          setWarning({
+            height: 200,
+            message: "Não há permissão para enviar notificações",
+            color: theme.colors.error
           });
-        }));
-        setWarning({
-          height: 200,
-          message: "As notificações foram ativadas, agora você será alertado antes do programa começar!",
-          color: theme.colors.error
-        });
-        setVisible(true);
+          setVisible(true);
+        }
       } else {
         await Notifications.cancelAllScheduledNotificationsAsync();
         setWarning({
@@ -233,8 +247,20 @@ export function Settings() {
         });
         setVisible(true);
       }
+      setNotification(isNotification);
+      setDataStorage({
+        name,
+        email,
+        notification: isNotification,
+      });
     } catch (e) {
       console.log(e);
+      setWarning({
+        height: 200,
+        message: e.message,
+        color: theme.colors.error
+      });
+      setVisible(true);
     }
   }
 
@@ -330,7 +356,7 @@ export function Settings() {
                 >
                   {
                     !isSubmittingEmail ?
-                    <Entypo name='save' size={28} color={theme.colors.light} /> :
+                      <Entypo name='save' size={28} color={theme.colors.light} /> :
                       <Load size={20} player={true} />
                   }
                 </SaveButton>

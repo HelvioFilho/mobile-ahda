@@ -3,6 +3,7 @@ import * as Notifications from 'expo-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DataBibleProps, SettingsProps } from './store';
 import { bible } from './api';
+import { Platform } from 'react-native';
 
 const { ASYNC_KEY } = process.env;
 const { TOKEN_B } = process.env;
@@ -39,6 +40,20 @@ export async function SetupTrackPlayer(urlRadio: string): Promise<boolean> {
     return isSetup;
 
   }
+}
+
+export async function VerifyNotifications(){
+  const settings = await Notifications.getPermissionsAsync();
+
+  if (Platform.OS === 'android') {
+    await Notifications.setNotificationChannelAsync('default', {
+      name: 'default',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250]
+    })
+  }
+
+  return settings.granted || settings.ios?.status === Notifications.IosAuthorizationStatus.PROVISIONAL;
 }
 
 export async function SetupNotifications(): Promise<boolean> {
