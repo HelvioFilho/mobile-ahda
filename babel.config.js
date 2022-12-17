@@ -10,8 +10,5 @@ module.exports = function (api) {
         plugins: [['inline-dotenv', {path: '.env'}]],
       }, 
     },
-    plugins: [
-      'react-native-reanimated/plugin'
-    ],
   };
 };
