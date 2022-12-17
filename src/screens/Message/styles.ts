@@ -1,6 +1,5 @@
 import styled from 'styled-components/native';
 import { TouchableOpacity } from 'react-native';
-import Animated from 'react-native-reanimated';
 import { RFPercentage, RFValue } from 'react-native-responsive-fontsize';
 
 export const Container = styled.View`
@@ -16,12 +15,12 @@ export const ContainerImage = styled.View`
   padding: 0 20px;
 `;
 
-export const MessageImage = styled(Animated.Image)`
+export const MessageImage = styled.Image`
   width: ${RFValue(100)}px;
   height: ${RFValue(100)}px;
 `;
 
-export const AngelHalo = styled(Animated.Image)`
+export const AngelHalo = styled.Image`
   position: absolute;
   top: ${RFValue(55)}px;
   left: ${RFPercentage(16)}px;

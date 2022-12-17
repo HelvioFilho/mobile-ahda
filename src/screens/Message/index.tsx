@@ -1,19 +1,12 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   Keyboard,
   KeyboardAvoidingView,
   Modal,
   Platform,
   ScrollView,
-  TouchableWithoutFeedback,
-  useWindowDimensions
+  TouchableWithoutFeedback
 } from 'react-native';
-import Animated, {
-  Easing,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming
-} from 'react-native-reanimated';
 
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
@@ -61,110 +54,10 @@ export function Message() {
   const [inputHeight, setInputHeight] = useState(50);
   const [visible, setVisible] = useState(false);
   const [warning, setWarning] = useState<WarningProps>({} as WarningProps);
-  const [animation, setAnimation] = useState(true);
-
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const theme = useTheme();
   const { startSettings } = appDataStore();
-  const { width: displayWidth } = useWindowDimensions();
-
-  const MessageAnimationX = useSharedValue(displayWidth * 0.80);
-  const MessageAnimationY = useSharedValue(displayWidth * 0.40);
-  const MessageOpacityAnimation = useSharedValue(0);
-  const AngelHaloAnimation = useSharedValue(0);
-  const TitleOpacityAnimation = useSharedValue(0);
-  const TextOpacityAnimation = useSharedValue(0);
-  const InputNameAnimation = useSharedValue(displayWidth * 1);
-  const InputEmailAnimation = useSharedValue(displayWidth * 1);
-  const InputMessageAnimation = useSharedValue(displayWidth * 1);
-  const ButtonAnimation = useSharedValue(displayWidth * 0.50);
-
-  const MessageRightStyle = useAnimatedStyle(() => {
-    return {
-      opacity: MessageOpacityAnimation.value,
-      transform: [
-        {
-          translateX: -MessageAnimationX.value,
-        },
-        {
-          translateY: MessageAnimationY.value,
-        }
-      ]
-    }
-  });
-
-  const MessageLeftStyle = useAnimatedStyle(() => {
-    return {
-      opacity: MessageOpacityAnimation.value,
-      transform: [
-        {
-          translateX: MessageAnimationX.value,
-        },
-        {
-          translateY: MessageAnimationY.value,
-        }
-      ]
-    }
-  });
-
-  const AngelHaloStyle = useAnimatedStyle(() => {
-    return {
-      opacity: AngelHaloAnimation.value
-    }
-  });
-
-  const TitleOpacityStyle = useAnimatedStyle(() => {
-    return {
-      opacity: TitleOpacityAnimation.value
-    }
-  });
-
-  const TextOpacityStyle = useAnimatedStyle(() => {
-    return {
-      opacity: TextOpacityAnimation.value
-    }
-  });
-
-  const InputNameStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateX: InputNameAnimation.value,
-        },
-      ]
-    }
-  });
-
-  const InputEmailStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateX: InputEmailAnimation.value,
-        },
-      ]
-    }
-  });
-
-  const InputMessageStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateX: InputMessageAnimation.value,
-        },
-      ]
-    }
-  });
-
-  const ButtonStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateY: ButtonAnimation.value,
-        },
-      ]
-    }
-  });
 
   const schema = Yup.object().shape({
     message: Yup
@@ -229,22 +122,6 @@ export function Message() {
     });
   }
 
-  useEffect(() => {
-    if (animation) {
-      MessageOpacityAnimation.value = withTiming(1, { duration: 1000 });
-      MessageAnimationX.value = withTiming(0, { duration: 2500 });
-      MessageAnimationY.value = withTiming(0, { duration: 2500 });
-      AngelHaloAnimation.value = withTiming(1, { duration: 4000 });
-      TitleOpacityAnimation.value = withTiming(1, { duration: 4000 });
-      TextOpacityAnimation.value = withTiming(1, { duration: 4500 });
-      InputNameAnimation.value = withTiming(0, { duration: 1000, easing: Easing.in(Easing.quad) });
-      InputEmailAnimation.value = withTiming(0, { duration: 1500, easing: Easing.in(Easing.quad) });
-      InputMessageAnimation.value = withTiming(0, { duration: 2000, easing: Easing.in(Easing.quad) });
-      ButtonAnimation.value = withTiming(0, { duration: 2000 });
-      setAnimation(false);
-    }
-  }, [animation]);
-
   useFocusEffect(useCallback(() => {
 
     setValue("name", startSettings.name ? startSettings.name : '');
@@ -264,80 +141,52 @@ export function Message() {
           <Container>
             <ContainerImage>
               <MessageImage
-                style={MessageLeftStyle}
                 source={SendRight}
               />
               <AngelHalo
-                style={AngelHaloStyle}
                 source={AngelHaloImage}
               />
               <MessageImage
-                style={MessageRightStyle}
                 source={SendLeft}
               />
             </ContainerImage>
-            <Animated.View
-              style={TitleOpacityStyle}
-            >
-              <Title>Nos envie {'\n'}uma mensagem!</Title>
-            </Animated.View>
-            <Animated.View
-              style={TextOpacityStyle}
-            >
-              <SubTitle>Suas mensagens podem ser lidas no programa, esse é o seu contato direto com A hora do anjo, então nos escreva!</SubTitle>
-            </Animated.View>
+            <Title>Nos envie {'\n'}uma mensagem!</Title>
+            <SubTitle>Suas mensagens podem ser lidas no programa, esse é o seu contato direto com A hora do anjo, então nos escreva!</SubTitle>
             <ContainerForm>
-              <Animated.View
-                style={InputNameStyle}
-              >
-                <InputMessage
-                  placeholder='Nome'
-                  label='Nome'
-                  name='name'
-                  control={control}
-                  autoCorrect={false}
-                  error={errors.name && errors.name.message as string}
-                />
-              </Animated.View>
-              <Animated.View
-                style={InputEmailStyle}
-              >
-                <InputMessage
-                  placeholder='E-mail'
-                  label='E-mail (Opcional)'
-                  name='email'
-                  control={control}
-                  error={errors.email && errors.email.message as string}
-                  autoCapitalize='none'
-                  keyboardType='email-address'
-                />
-              </Animated.View>
-              <Animated.View
-                style={InputMessageStyle}
-              >
-                <InputMessage
-                  placeholder='Sua mensagem'
-                  label='Mensagem'
-                  name='message'
-                  control={control}
-                  changeHeight={inputHeight}
-                  error={errors.message && errors.message.message as string}
-                  multiline={true}
-                  onContentSizeChange={(e) => setInputHeight(e.nativeEvent.contentSize.height + 30)}
-                />
-              </Animated.View>
-              <Animated.View
-                style={ButtonStyle}
-              >
-                <ContainerButton disabled={isSubmitting} onPress={handleSubmit(handleSendMessage)}>
-                  {
-                    isSubmitting ?
-                      <Load size={24} player={true} /> :
-                      <ButtonText>Enviar</ButtonText>
-
-                  }
-                </ContainerButton>
-              </Animated.View>
+              <InputMessage
+                placeholder='Nome'
+                label='Nome'
+                name='name'
+                control={control}
+                autoCorrect={false}
+                error={errors.name && errors.name.message as string}
+              />
+              <InputMessage
+                placeholder='E-mail'
+                label='E-mail (Opcional)'
+                name='email'
+                control={control}
+                error={errors.email && errors.email.message as string}
+                autoCapitalize='none'
+                keyboardType='email-address'
+              />
+              <InputMessage
+                placeholder='Sua mensagem'
+                label='Mensagem'
+                name='message'
+                control={control}
+                changeHeight={inputHeight}
+                error={errors.message && errors.message.message as string}
+                multiline={true}
+                onContentSizeChange={(e) => setInputHeight(e.nativeEvent.contentSize.height + 30)}
+              />
+              <ContainerButton disabled={isSubmitting} onPress={handleSubmit(handleSendMessage)}>
+                {
+                  isSubmitting ?
+                    <Load size={24} player={true} /> :
+                    <ButtonText>Enviar</ButtonText>
+                }
+              </ContainerButton>
             </ContainerForm>
             <Modal
               animationType='fade'

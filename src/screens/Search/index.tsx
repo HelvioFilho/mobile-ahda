@@ -1,35 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   FlatList,
   Keyboard,
   KeyboardAvoidingView,
-  Platform, TouchableWithoutFeedback, useWindowDimensions
+  Platform, 
+  TouchableWithoutFeedback
 } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming
-} from 'react-native-reanimated';
 
 import { useTheme } from 'styled-components';
 import { api } from '../../services/api';
 
-import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
+import * as Yup from 'yup';
 
-import { Ionicons, MaterialCommunityIcons, EvilIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { InputMessage } from '../../components/InputMessage';
 import { Load } from '../../components/Load';
 import { PostList } from '../../components/PostList';
 import { PostProps } from '../Home';
 import {
   Container,
-  ContainerForm,
-  SearchButton,
-  ContainerWarning,
+  ContainerForm, 
+  ContainerWarning, 
+  SearchButton, 
   TextWarning
 } from './styles';
-import { InputMessage } from '../../components/InputMessage';
 
 const { KEY } = process.env;
 
@@ -45,33 +41,11 @@ export function Search() {
   const [isSearch, setIsSearch] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const [isEmpty, setIsEmpty] = useState(false);
-  const [animated, setAnimated] = useState(false);
-  const [animation, setAnimation] = useState(true);
 
   const size = 2;
 
   const theme = useTheme();
-  const { width: displayWidth } = useWindowDimensions();
-
-  const InputSearchAnimation = useSharedValue(displayWidth * 1);
-  const IconAnimation = useSharedValue(0);
-
-  const InputSearchStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateX: InputSearchAnimation.value
-        }
-      ]
-    }
-  });
-
-  const IconStyle = useAnimatedStyle(() => {
-    return {
-      opacity: IconAnimation.value
-    }
-  });
-
+  
   const schema = Yup.object().shape({
     search: Yup
       .string()
@@ -112,7 +86,6 @@ export function Search() {
           setPost(data.data);
         }
         setTotalPage(data.count);
-        setAnimated(true);
       } else {
         console.log(data.error);
       }
@@ -120,21 +93,8 @@ export function Search() {
       console.log(e);
     } finally {
       setLoading(false);
-      setAnimated(false);
     }
   }
-
-  useEffect(() => {
-    if (animation) {
-      InputSearchAnimation.value = withTiming(0,
-        { duration: 2000 },
-        () => {
-          IconAnimation.value = withTiming(1, { duration: 2000 });
-        }
-      );
-      setAnimation(false);
-    }
-  }, [animation]);
 
   return (
     <KeyboardAvoidingView
@@ -145,31 +105,27 @@ export function Search() {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <Container>
           <ContainerForm>
-            <Animated.View style={InputSearchStyle}>
-              <InputMessage
-                placeholder='Busca'
-                label='Faça sua busca'
-                control={control}
-                name='search'
-                error={errors.search && errors.search.message as string}
+            <InputMessage
+              placeholder='Busca'
+              label='Faça sua busca'
+              control={control}
+              name='search'
+              error={errors.search && errors.search.message as string}
+            >
+              <SearchButton
+                disabled={isSearch}
+                onPress={handleSubmit(handleSearch)}
               >
-                <SearchButton
-                  disabled={isSearch}
-                  onPress={handleSubmit(handleSearch)}
-                >
-                  <Animated.View style={IconStyle}>
-                    <MaterialCommunityIcons name='magnify' size={28} color={theme.colors.light} />
-                  </Animated.View>
-                </SearchButton>
-              </InputMessage>
-            </Animated.View>
+                <MaterialCommunityIcons name='magnify' size={28} color={theme.colors.light} />
+              </SearchButton>
+            </InputMessage>
           </ContainerForm>
           <FlatList
             data={post}
             keyExtractor={item => item.id}
             renderItem={({ item }) => {
               return (
-                <PostList data={item} animation={animated} />
+                <PostList data={item} />
               )
             }}
             onEndReached={() => {

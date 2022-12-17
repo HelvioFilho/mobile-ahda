@@ -1,8 +1,7 @@
 import styled from 'styled-components/native';
 import { RFValue } from 'react-native-responsive-fontsize';
-import Animated from 'react-native-reanimated';
 
-export const Container = styled(Animated.View)`
+export const Container = styled.View`
   background-color: #ffffff;
   border-bottom-width: 1px;
   border-color: rgba(0,0,0,0.3);

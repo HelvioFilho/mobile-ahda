@@ -36,7 +36,6 @@ export function Home() {
   const [page, setPage] = useState(1);
   const [startLoading, setStartLoading] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [animated, setAnimated] = useState(false);
   const [post, setPost] = useState<PostProps[]>([]);
   const [update, setUpdate] = useState<UpdatePostProps>({} as UpdatePostProps);
   const [visible, setVisible] = useState(true);
@@ -106,7 +105,7 @@ export function Home() {
               keyExtractor={item => item.id}
               renderItem={({ item }) => {
                 return (
-                  <PostList data={item} animation={animated} />
+                  <PostList data={item} />
                 )
               }}
               refreshControl={
@@ -126,7 +125,7 @@ export function Home() {
               }}
               onEndReachedThreshold={0.1}
               ListHeaderComponent={
-                <Header animation={animated} />
+                <Header />
               }
               ListFooterComponent={
                 loading ?
@@ -136,7 +135,7 @@ export function Home() {
             />
             :
             <>
-              <Header animation={animated} />
+              <Header />
               <ContainerWarn>
                 <TextWarn>Ainda não há publicações.</TextWarn>
               </ContainerWarn>
@@ -148,13 +147,11 @@ export function Home() {
         visible={visible}
         onRequestClose={() => {
           setVisible(false);
-          setAnimated(true);
         }}
       >
         <BibleModal
           closeModal={() => {
             setVisible(false);
-            setAnimated(true);
           }}
         />
       </Modal>

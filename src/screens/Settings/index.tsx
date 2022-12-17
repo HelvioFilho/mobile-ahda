@@ -1,26 +1,24 @@
 import React, { useEffect, useState } from 'react';
+import { Entypo } from '@expo/vector-icons';
+import * as Notifications from 'expo-notifications';
 import {
   Keyboard,
-  KeyboardAvoidingView, Modal, Platform,
-  Switch, TouchableWithoutFeedback, useWindowDimensions
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  Switch,
+  TouchableWithoutFeedback
 } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming
-} from 'react-native-reanimated';
-
-import { Entypo } from '@expo/vector-icons';
-
-import * as Notifications from 'expo-notifications';
 import * as Yup from 'yup';
 import { InputField } from '../../components/InputField';
 
 import { useTheme } from 'styled-components';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { About } from '../../components/About';
 import { Load } from '../../components/Load';
 import { WarningModal } from '../../components/WarningModal';
+import { ScheduleNotifications, VerifyNotifications } from '../../services/Setup';
 import { appDataStore, SettingsProps } from '../../services/store';
 import {
   ButtonAbout,
@@ -33,8 +31,6 @@ import {
   TextSwitch,
   Title
 } from './styles';
-import { About } from '../../components/About';
-import { VerifyNotifications } from '../../services/Setup';
 
 const { ASYNC_KEY } = process.env;
 
@@ -55,60 +51,10 @@ export function Settings() {
   const [visible, setVisible] = useState(false);
   const [visibleAbout, setVisibleAbout] = useState(false);
   const [warning, setWarning] = useState<WarningProps>({} as WarningProps);
-  const [animation, setAnimation] = useState(true);
 
   const theme = useTheme();
   const { startSettings, setStartSettings } = appDataStore();
-  const { width: displayWidth } = useWindowDimensions();
-
-  const TextAnimation = useSharedValue(0);
-  const SwitchAnimation = useSharedValue(0);
-  const InputNameAnimation = useSharedValue(displayWidth * 1);
-  const InputEmailAnimation = useSharedValue(displayWidth * 1);
-  const AboutAnimation = useSharedValue(displayWidth * 0.50);
-
-  const InputNameStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateX: InputNameAnimation.value
-        }
-      ]
-    }
-  });
-
-  const InputEmailStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateX: InputEmailAnimation.value
-        }
-      ]
-    }
-  });
-
-  const TextStyle = useAnimatedStyle(() => {
-    return {
-      opacity: TextAnimation.value
-    }
-  });
-
-  const SwitchStyle = useAnimatedStyle(() => {
-    return {
-      opacity: SwitchAnimation.value
-    }
-  });
-
-  const AboutStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateY: AboutAnimation.value
-        }
-      ]
-    }
-  });
-
+  
   const schema = {
     name: Yup.object().shape({
       name: Yup
@@ -198,38 +144,20 @@ export function Settings() {
       if (isNotification) {
         const hasPermission = await VerifyNotifications();
         if (hasPermission) {
-          try {
-            const days = [2, 3, 4, 5, 6];
-            await Promise.all(days.map(async (day) => {
-              await Notifications.scheduleNotificationAsync({
-                identifier: `program${day}`,
-                content: {
-                  title: 'A hora do anjo',
-                  body: 'O programa começará em 5 minutos.',
-                  priority: Notifications.AndroidNotificationPriority.HIGH,
-                },
-                trigger: {
-                  hour: 21,
-                  minute: 0,
-                  weekday: day,
-                  repeats: true
-                }
-              });
-            }));
+          if (ScheduleNotifications()) {
             setWarning({
               height: 200,
               message: "As notificações foram ativadas, agora você será alertado antes do programa começar!",
               color: theme.colors.error
             });
-            setVisible(true);
-          }catch (e) {
+          } else {
             setWarning({
               height: 200,
               message: "Algo deu errado e não foi possível ativar a notificação!",
               color: theme.colors.error
             });
-            setVisible(true);
           }
+          setVisible(true);
         } else {
           setWarning({
             height: 200,
@@ -271,17 +199,6 @@ export function Settings() {
     setNotification(isBoolean ? startSettings.notification : false);
   }, []);
 
-  useEffect(() => {
-    if (animation) {
-      TextAnimation.value = withTiming(1, { duration: 2000 });
-      InputNameAnimation.value = withTiming(0, { duration: 2000 });
-      InputEmailAnimation.value = withTiming(0, { duration: 2500 });
-      SwitchAnimation.value = withTiming(1, { duration: 3000 });
-      AboutAnimation.value = withTiming(0, { duration: 4000 });
-      setAnimation(false);
-    }
-  }, [animation]);
-
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -290,79 +207,73 @@ export function Settings() {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <Container>
-          <Animated.View style={TextStyle}>
-            <Title>Configurações do Aplicativo</Title>
-          </Animated.View>
+          <Title>Configurações do Aplicativo</Title>
           <ContainerForm>
-            <Animated.View style={InputNameStyle}>
-              <InputField
-                placeholder='Nome'
-                label='Nome'
-                onChangeText={(name) => {
-                  setName(name);
-                  if (name.length === 4) {
-                    setNameError(null);
+            <InputField
+              placeholder='Nome'
+              label='Nome'
+              onChangeText={(name) => {
+                setName(name);
+                if (name.length === 4) {
+                  setNameError(null);
+                }
+              }}
+              value={name}
+              autoCorrect={false}
+              error={nameError}
+            >
+              <SaveButton
+                disabled={isSubmittingName}
+                onPress={() => {
+                  if (startSettings.name !== name) {
+                    Keyboard.dismiss();
+                    setIsSubmittingName(true)
+                    setTimeout(async () => {
+                      handleChangedName();
+                    }, 800);
                   }
                 }}
-                value={name}
-                autoCorrect={false}
-                error={nameError}
+                activeOpacity={0.8}
               >
-                <SaveButton
-                  disabled={isSubmittingName}
-                  onPress={() => {
-                    if (startSettings.name !== name) {
-                      Keyboard.dismiss();
-                      setIsSubmittingName(true)
-                      setTimeout(async () => {
-                        handleChangedName();
-                      }, 800);
-                    }
-                  }}
-                  activeOpacity={0.8}
-                >
-                  {
-                    !isSubmittingName ?
-                      <Entypo name='save' size={28} color={theme.colors.light} /> :
-                      <Load size={20} player={true} />
+                {
+                  !isSubmittingName ?
+                    <Entypo name='save' size={28} color={theme.colors.light} /> :
+                    <Load size={20} player={true} />
+                }
+              </SaveButton>
+            </InputField>
+            <InputField
+              placeholder='E-mail'
+              label='E-mail'
+              onChangeText={setEmail}
+              onFocus={() => setEmailError(null)}
+              value={email}
+              autoCapitalize='none'
+              autoCorrect={false}
+              keyboardType='email-address'
+              error={emailError}
+            >
+              <SaveButton
+                disabled={isSubmittingEmail}
+                onPress={() => {
+                  if (startSettings.email !== email) {
+                    Keyboard.dismiss();
+                    setIsSubmittingEmail(true)
+                    setTimeout(async () => {
+                      handleChangedEmail();
+                    }, 800);
                   }
-                </SaveButton>
-              </InputField>
-            </Animated.View>
-            <Animated.View style={InputEmailStyle}>
-              <InputField
-                placeholder='E-mail'
-                label='E-mail'
-                onChangeText={setEmail}
-                onFocus={() => setEmailError(null)}
-                value={email}
-                autoCapitalize='none'
-                autoCorrect={false}
-                keyboardType='email-address'
-                error={emailError}
+                }}
+                activeOpacity={0.8}
               >
-                <SaveButton
-                  disabled={isSubmittingEmail}
-                  onPress={() => {
-                    if (startSettings.email !== email) {
-                      Keyboard.dismiss();
-                      setIsSubmittingEmail(true)
-                      setTimeout(async () => {
-                        handleChangedEmail();
-                      }, 800);
-                    }
-                  }}
-                  activeOpacity={0.8}
-                >
-                  {
-                    !isSubmittingEmail ?
-                      <Entypo name='save' size={28} color={theme.colors.light} /> :
-                      <Load size={20} player={true} />
-                  }
-                </SaveButton>
-              </InputField>
-            </Animated.View>
-            <SwitchWrapper style={SwitchStyle}>
+                {
+                  !isSubmittingEmail ?
+                    <Entypo name='save' size={28} color={theme.colors.light} /> :
+                    <Load size={20} player={true} />
+                }
+              </SaveButton>
+            </InputField>
+            <SwitchWrapper>
               <TextSwitch>Deseja receber notificação sobre o inicio do programa?</TextSwitch>
               <Switch
                 trackColor={{
@@ -377,7 +288,7 @@ export function Settings() {
               />
             </SwitchWrapper>
           </ContainerForm>
-          <ContainerFooter style={AboutStyle}>
+          <ContainerFooter>
             <ButtonAbout
               onPress={() => setVisibleAbout(true)}
               activeOpacity={0.8}
