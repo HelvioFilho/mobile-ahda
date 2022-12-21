@@ -11,13 +11,20 @@ export const Container = styled.SafeAreaView`
 export const List = styled(FlatList)``;
 
 export const ContainerWarn = styled.View`
-  flex: 1;
   width: 100%;
   align-items: center;
   justify-content: center;
+  margin-top: 20px;
 `;
 
 export const TextWarn = styled.Text`
   font-size: ${RFValue(18)}px;
+  font-family: ${({ theme}) => theme.fonts.Regular};
+`;
+
+export const PageWarn = styled.Text`
+  align-self: center;
+  padding: 5px 0px 50px 0px;
+  font-size: ${RFValue(12)}px;
   font-family: ${({ theme}) => theme.fonts.Regular};
 `;

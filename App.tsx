@@ -18,9 +18,11 @@ import { SetupNotifications, SetupStartSettings, SetupTrackPlayer } from './src/
 import { appDataStore } from './src/services/store';
 import { useNetInfo } from '@react-native-community/netinfo';
 import { NoConnected } from './src/screens/NoConnected';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 export default function App() {
-
   const [splash, setSplash] = useState(true);
   const [player, setPlayer] = useState(false);
   const [notification, setNotification] = useState(false);
@@ -35,7 +37,6 @@ export default function App() {
   const { setBible, setStartSettings } = appDataStore();
 
   async function getSetup() {
-
     const isPlayer = await SetupTrackPlayer("https://s18.maxcast.com.br:8707/live");
     const isNotification = await SetupNotifications();
     const isSettings = await SetupStartSettings();
@@ -83,19 +84,21 @@ export default function App() {
 
   return (
     <ThemeProvider theme={theme} >
-      <SafeAreaView style={{ flex: 1 }}>
-        <StatusBar
-          backgroundColor={theme.colors.background}
-          barStyle='dark-content'
-        />
-        { 
-          netInfo.isConnected ?
-          fontsLoaded ? 
-          <Routes /> : 
-          <Load size={35} /> :
-          <NoConnected />
-        }
-      </SafeAreaView>
+      <QueryClientProvider client={queryClient}>
+        <SafeAreaView style={{ flex: 1 }}>
+          <StatusBar
+            backgroundColor={theme.colors.background}
+            barStyle='dark-content'
+          />
+          {
+            netInfo.isConnected ?
+              fontsLoaded ?
+                <Routes /> :
+                <Load size={35} /> :
+              <NoConnected />
+          }
+        </SafeAreaView>
+      </QueryClientProvider>
     </ThemeProvider>
   );
 }
