@@ -6,7 +6,6 @@ import { bible } from './api';
 import { Platform } from 'react-native';
 
 const { ASYNC_KEY } = process.env;
-const { TOKEN_B } = process.env;
 
 interface StartSettingsProps {
   settings: SettingsProps;
@@ -123,11 +122,7 @@ export async function SetupStartSettings(): Promise<StartSettingsProps> {
     const response = await AsyncStorage.getItem(ASYNC_KEY);
     const settings = response ? JSON.parse(response) : {} as SettingsProps;
 
-    const { data } = await bible.get('/verses/ra/random', {
-      headers: {
-        'Authorization': `Bearer ${TOKEN_B}`,
-      }
-    });
+    const { data } = await bible.get('/verses/ra/random');
     const bibleData = {
       book: data.book.name,
       chapter: data.chapter,
