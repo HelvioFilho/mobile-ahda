@@ -1,5 +1,4 @@
 import create from 'zustand';
-import { PostProps } from '../screens/Home';
 
 export interface DataBibleProps {
   book: string;
@@ -15,8 +14,6 @@ export interface SettingsProps {
 }
 
 interface ZustandProps {
-  data: PostProps;
-  setData: (data: PostProps) => void;
   startSettings: SettingsProps;
   setStartSettings: (startSettings: SettingsProps) => void;
   bible: DataBibleProps;
@@ -24,8 +21,6 @@ interface ZustandProps {
 }
 
 export const appDataStore = create<ZustandProps>((set) => ({
-  data: {} as PostProps,
-  setData: (data) => set({data}),
   startSettings: {} as SettingsProps,
   setStartSettings: (startSettings) => set({startSettings}),
   bible: {} as DataBibleProps,

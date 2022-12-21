@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Dimensions, Image, ScrollView, useWindowDimensions } from 'react-native';
 import RenderHTML from 'react-native-render-html';
@@ -7,7 +7,6 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import { useTheme } from 'styled-components';
 import { ImageGallery } from '../../components/ImageGallery';
 import { api } from '../../services/api';
-import { appDataStore } from '../../services/store';
 
 import {
   About,
@@ -26,6 +25,7 @@ import {
   Title,
   TitleGallery
 } from './styles';
+import { PostProps } from '../Home';
 
 const { KEY } = process.env;
 
@@ -34,12 +34,16 @@ interface GalleryProps {
   path: string;
 }
 
-export function Post() {
+interface RouteParams {
+  data: PostProps
+}
 
-  const { data } = appDataStore();
+export function Post() {
   const { width } = useWindowDimensions();
   const theme = useTheme();
   const { goBack } = useNavigation();
+  const { params } = useRoute();
+  const { data } = params as RouteParams;
 
   const date = data.date_post.split(' ');
   const day = date[0];
@@ -111,7 +115,7 @@ export function Post() {
     }
   }
 
-  async function getMaxHeight(){
+  async function getMaxHeight() {
     await Image.getSize(data.cover, (width, height) => {
       setMaxHeight((displayWidth * height) / width)
     });
@@ -176,7 +180,7 @@ export function Post() {
         activeOpacity={0.8}
         onPress={goBack}
       >
-        <MaterialIcons 
+        <MaterialIcons
           name='keyboard-arrow-left'
           size={20}
           color={theme.colors.light}

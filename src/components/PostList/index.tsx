@@ -23,12 +23,11 @@ export function PostList({ data }: PostListProps) {
   const [newDate, setNewDate] = useState('');
   const [newHour, setNewHour] = useState('');
 
-  const { setData } = appDataStore();
+  // const { setData } = appDataStore();
   const { navigate } = useNavigation();
 
   function handleSelectPost() {
-    setData(data);
-    navigate('Post');
+    navigate('Post',{ data });
   }
 
   useEffect(() => {
@@ -60,4 +59,4 @@ export function PostList({ data }: PostListProps) {
       <Date>publicado em: {newDate} às {newHour}</Date>
     </Container>
   );
-}
+};
