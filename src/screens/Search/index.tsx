@@ -26,6 +26,7 @@ import {
   SearchButton, 
   TextWarning
 } from './styles';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
 const { KEY } = process.env;
 
@@ -39,10 +40,26 @@ export function Search() {
   const [loading, setLoading] = useState(false);
   const [post, setPost] = useState<PostProps[]>([]);
   const [isSearch, setIsSearch] = useState(false);
-  const [searchValue, setSearchValue] = useState('');
+  const [search, setSearch] = useState('');
   const [isEmpty, setIsEmpty] = useState(false);
 
   const size = 2;
+
+  const { data, status, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteQuery(['searchPost'],
+    async ({pageParam = 1}) => {
+      if(!!search){
+        const {data} = await api.get(`search?search=${search}&page=${pageParam}&size=${size}&key=${KEY}`);
+        return {...data, pageParam}
+      }else{
+        return [];
+      }
+    },
+    {
+      getNextPageParam: (pages) => {
+        
+      }
+    }
+  );
 
   const theme = useTheme();
   
@@ -63,13 +80,13 @@ export function Search() {
   });
 
   async function handleSearch(form: Partial<DataForm>) {
-    setIsSearch(true);
-    const formPage = page > 1 ? 1 : page;
-    setIsEmpty(false);
-    setPage(formPage);
-    setSearchValue(form.search);
-    getPosts(form.search, formPage);
-    setIsSearch(false);
+    // setIsSearch(true);
+    // const formPage = page > 1 ? 1 : page;
+    // setIsEmpty(false);
+    // setPage(formPage);
+    setSearch(form.search);
+    // getPosts(form.search, formPage);
+    // setIsSearch(false);
   }
 
   async function getPosts(search: string, setPage: number) {
@@ -84,6 +101,7 @@ export function Search() {
         } else {
           if (data.data.length === 0) setIsEmpty(true);
           setPost(data.data);
+
         }
         setTotalPage(data.count);
       } else {
@@ -95,6 +113,16 @@ export function Search() {
       setLoading(false);
     }
   }
+
+  if (status === 'loading') {
+    return (
+      <Container>
+        <Load size={50} />
+      </Container>
+    )
+  }
+
+  console.log(data);
 
   return (
     <KeyboardAvoidingView
@@ -133,7 +161,7 @@ export function Search() {
                 if (!loading) {
                   const pageUpdate = page + 1;
                   setPage(pageUpdate);
-                  getPosts(searchValue, pageUpdate);
+                  // getPosts(searchValue, pageUpdate);
                 }
               }
             }}

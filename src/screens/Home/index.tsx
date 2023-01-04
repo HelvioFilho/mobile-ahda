@@ -31,6 +31,8 @@ export function Home() {
   const [visibleWarn, setVisibleWarn] = useState(false);
   const [visible, setVisible] = useState(true);
 
+  const theme = useTheme();
+
   const { data, status, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteQuery(['getPost'],
     async ({ pageParam = 1 }) => {
       const { data } = await api.get(`get_post?page=${pageParam}&size=${size}&key=${KEY}`);
@@ -45,10 +47,7 @@ export function Home() {
         }
       }
     }
-
   );
-
-  const theme = useTheme();
 
   if (status === 'loading') {
     return (
@@ -79,12 +78,11 @@ export function Home() {
         onEndReached={() => {
           fetchNextPage();
           if (!hasNextPage) {
-            if(!visibleWarn){
-              setVisibleWarn(true);
-              setTimeout(() => {
-                setVisibleWarn(false);
-              }, 4000);
+            if (!visibleWarn) {
+              setVisibleWarn(true)
             }
+          }else{
+            setVisibleWarn(false);
           }
         }}
         onEndReachedThreshold={0.1}

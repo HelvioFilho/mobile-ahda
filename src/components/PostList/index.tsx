@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { PostProps } from '../../screens/Home';
-import { appDataStore } from '../../services/store';
 
 import {
   Container,
@@ -19,11 +18,10 @@ interface PostListProps {
   data: PostProps;
 }
 
-export function PostList({ data }: PostListProps) {
+export const PostList = React.memo(function PostList({ data }: PostListProps) {
   const [newDate, setNewDate] = useState('');
   const [newHour, setNewHour] = useState('');
 
-  // const { setData } = appDataStore();
   const { navigate } = useNavigation();
 
   function handleSelectPost() {
@@ -59,4 +57,4 @@ export function PostList({ data }: PostListProps) {
       <Date>publicado em: {newDate} às {newHour}</Date>
     </Container>
   );
-};
+});
