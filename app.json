@@ -1,0 +1,38 @@
+{
+  "expo": {
+    "name": "A hora do anjo",
+    "slug": "ahda",
+    "orientation": "portrait",
+    "icon": "./src/assets/main/icon.png",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "splash": {
+      "image": "./src/assets/main/splash.png",
+      "backgroundColor": "#CAEAF5",
+      "resizeMode": "contain"
+    },
+    "androidStatusBar": {
+      "barStyle": "dark-content"
+    },
+    "android": {
+      "package": "com.ahda",
+      "useNextNotificationsApi": true,
+      "permissions": ["RECEIVE_BOOT_COMPLETED"]
+    },
+    "ios": {
+      "bundleIdentifier": "com.ahda"
+    },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./src/assets/main/notification.png",
+          "color": "#CAEAF5"
+        }
+      ]
+    ],
+    "description": "Radio application A hora do Anjo, a radio station created in Novo Repartimento, a city in the interior of Pará, Brazil.",
+    "githubUrl": "https://github.com/HelvioFilho/mobile-ahda"
+  }
+}
