@@ -14,7 +14,7 @@ type InputMessageProps = TextInputProps & {
   control: Control;
   error: string | undefined;
   changeHeight?: number;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 export function InputMessage(
