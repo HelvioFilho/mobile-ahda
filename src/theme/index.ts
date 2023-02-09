@@ -4,6 +4,9 @@ export default {
     text_mid: '#3E3E3E',
     text_light: '#CFCFCF',
 
+    inputField: '#3D434D',
+    inputBorder: '#E3E4E5',
+
     light: '#FFFFFF',
     dark: '#000000',
 
