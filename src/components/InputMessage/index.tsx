@@ -12,7 +12,7 @@ type InputMessageProps = TextInputProps & {
   name: string;
   label: string;
   control: Control;
-  error: string;
+  error: string | undefined;
   changeHeight?: number;
   children: React.ReactNode;
 }
@@ -26,7 +26,7 @@ export function InputMessage(
     changeHeight = 50,
     children, ...rest
   }: InputMessageProps) {
-    
+
   return (
     <Container>
       <Label>{label}</Label>
