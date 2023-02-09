@@ -24,8 +24,8 @@ export default {
   },
   
   fonts: {
-    Regular: 'Roboto_400Regular',
-    Medium: 'Roboto_500Medium',
-    Bold: 'Roboto_700Bold',
+    regular: 'Roboto_400Regular',
+    medium: 'Roboto_500Medium',
+    bold: 'Roboto_700Bold',
   },
 }
