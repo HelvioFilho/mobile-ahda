@@ -1,12 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import theme from './src/theme';
-import { Roboto_400Regular, Roboto_500Medium, Roboto_700Bold, useFonts } from '@expo-google-fonts/roboto';
 import { ThemeProvider } from 'styled-components/native';
 import { SafeAreaView, StatusBar } from 'react-native';
-import { Loading } from '@components/Loading';
+import theme from './src/theme';
+import {
+  Roboto_400Regular,
+  Roboto_500Medium,
+  Roboto_700Bold,
+  useFonts
+} from '@expo-google-fonts/roboto';
+import { useNetInfo } from '@react-native-community/netinfo';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Loading } from '@components/Loading';
+import { Offline } from '@screens/Offline';
 import { LoadingScreen } from '@screens/LoadingScreen';
-import { SetupNotifications, SetupStartSettings, SetupTrackPlayer } from './src/services/Setup';
+import { CheckActiveNotifications, SetupNotifications, SetupStartSettings, SetupTrackPlayer } from './src/services/Setup';
 import { appDataStore } from '@services/store';
 import { Routes } from '@routes/index';
 
@@ -17,12 +24,20 @@ export default function App() {
   const [player, setPlayer] = useState(false);
   const [notification, setNotification] = useState(false);
   const { setBible, setStartSettings } = appDataStore();
-  const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_500Medium, Roboto_700Bold });
 
-  async function getSetup(){
+  const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_500Medium, Roboto_700Bold });
+  const netInfo = useNetInfo();
+
+  async function getSetup() {
     const isSettings = await SetupStartSettings();
     const isPlayer = await SetupTrackPlayer();
     const isNotification = await SetupNotifications();
+    if(isSettings){
+      if(isSettings.settings.notification){
+        await CheckActiveNotifications();
+      }
+    }
+
     setBible(isSettings.bible);
     setStartSettings(isSettings.settings);
     setPlayer(isPlayer);
@@ -30,16 +45,16 @@ export default function App() {
   }
 
   useEffect(() => {
-    if(!player && !notification){
+    if (!player && !notification) {
       getSetup();
     }
   }, [notification]);
 
-  if(splash){
+  if (splash) {
     return (
       <ThemeProvider theme={theme}>
         {
-          <LoadingScreen 
+          <LoadingScreen
             onFinished={() => setSplash(false)}
           />
         }
@@ -55,7 +70,13 @@ export default function App() {
             backgroundColor={theme.colors.background}
             barStyle="dark-content"
           />
-          {fontsLoaded ? <Routes /> : <Loading size={32} />}
+          {
+            netInfo.isConnected
+              ?
+              fontsLoaded ? <Routes /> : <Loading size={32} />
+              :
+              <Offline />
+          }
         </SafeAreaView>
       </QueryClientProvider>
     </ThemeProvider>
