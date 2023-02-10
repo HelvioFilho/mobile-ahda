@@ -21,7 +21,14 @@
       "permissions": ["RECEIVE_BOOT_COMPLETED"]
     },
     "ios": {
-      "bundleIdentifier": "com.ahda"
+      "bundleIdentifier": "com.ahda",
+      "supportsTablet": true,
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "audio"
+        ]
+      }
+
     },
     "plugins": [
       [
