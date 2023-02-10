@@ -16,6 +16,9 @@
       "@services/*": [
         "./src/services/*"
       ],
+      "@utils/*": [
+        "./src/utils/*"
+      ],
       "@routes/*": [
         "./src/routes/*"
       ]
