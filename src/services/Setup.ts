@@ -12,7 +12,7 @@ type StartSettingsProps = {
   bible: DataBibleProps;
 }
 
-async function addPlayer(){
+async function addPlayer() {
   await TrackPlayer.add({
     url: 'https://s18.maxcast.com.br:8707/live',
     artwork: require('@assets/angel-blue.png'),
@@ -21,11 +21,11 @@ async function addPlayer(){
   });
 }
 
-async function removePlayer(){
+async function removePlayer() {
   await TrackPlayer.reset();
 }
 
-export async function changedTrackPlayer(){
+export async function changedTrackPlayer() {
   await removePlayer();
   await addPlayer();
 }
@@ -117,7 +117,10 @@ export async function ScheduleNotifications(): Promise<boolean> {
 
 export async function CheckActiveNotifications() {
   const settings = await Notifications.getAllScheduledNotificationsAsync();
-  return settings.length > 0;
+  if(settings.length < 4) {
+    await Notifications.cancelAllScheduledNotificationsAsync();
+    await ScheduleNotifications();
+  }
 }
 
 export async function SetupStartSettings(): Promise<StartSettingsProps> {
@@ -126,7 +129,18 @@ export async function SetupStartSettings(): Promise<StartSettingsProps> {
   try {
     const response = await AsyncStorage.getItem(ASYNC_KEY as string);
     const settings = response ? JSON.parse(response) : {} as SettingsProps;
-    const { data } = await bible.get('/verses/ra/random');
+    const { data } = await bible.get('/verses/ra/random').catch(() => {
+      return {
+        data: {
+          book: {
+            name: "Eclesiastes"
+          },
+          chapter: 9,
+          number: 10,
+          text: "Posso todas as coisas em Cristo que me fortalece."
+        }
+      }
+    });
     let bibleData = {} as DataBibleProps;
     if (typeof data === 'object' && Object.keys(data).length > 0) {
       bibleData = {
@@ -134,13 +148,6 @@ export async function SetupStartSettings(): Promise<StartSettingsProps> {
         chapter: data.chapter,
         number: data.number,
         text: data.text,
-      }
-    } else {
-      bibleData = {
-        book: "Eclesiastes",
-        chapter: 9,
-        number: 10,
-        text: "Posso todas as coisas em Cristo que me fortalece."
       }
     }
     return {
