@@ -1,16 +1,34 @@
 import React, { useEffect, useState } from 'react';
+import { Dimensions, Image, ScrollView } from 'react-native';
+import { 
+  About, 
+  AboutWrapper, 
+  Avatar, 
+  BackButton, 
+  Container, 
+  ContainerAvatar, 
+  ContainerGallery, 
+  ContainerRender, 
+  Cover, 
+  CoverWrapper, 
+  Footer, 
+  Name, 
+  Published, 
+  Title, 
+  TitleGallery 
+} from './styles';
 import { MaterialIcons } from '@expo/vector-icons';
-import { About, AboutWrapper, Avatar, BackButton, Container, ContainerAvatar, ContainerGallery, ContainerRender, Cover, CoverWrapper, Footer, Name, Published, Title, TitleGallery } from './styles';
 import RenderHTML from 'react-native-render-html';
-import { PostProps } from '@screens/Home';
-import { Dimensions, Image } from 'react-native';
+
 import { useTheme } from 'styled-components/native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
+
+import { api } from '@services/api';
 import { formattedText } from '@utils/formattedText';
 import { getTagStyle } from '@utils/tagStyle';
-import { api } from '@services/api';
-import { ScrollView } from 'react-native';
+
 import { ImageGallery } from '@components/ImageGallery';
+
 import { appDataStore } from '@services/store';
 
 const { KEY } = process.env;

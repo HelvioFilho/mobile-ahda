@@ -1,17 +1,38 @@
-import * as Notifications from 'expo-notifications';
-import { Entypo } from '@expo/vector-icons';
-import * as Yup from 'yup';
+import { useCallback, useState } from 'react';
+import { 
+  Keyboard, 
+  KeyboardAvoidingView, 
+  Modal, 
+  Platform, 
+  Switch, 
+  TouchableWithoutFeedback 
+} from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ButtonAbout, Container, ContainerFooter, ContainerForm, SaveButton, SwitchWrapper, TextAbout, TextSwitch, Title } from './styles';
-import { useEffect, useState } from 'react';
 import { useTheme } from 'styled-components/native';
-import { appDataStore, SettingsProps } from '@services/store';
-import { ScheduleNotifications, VerifyNotifications } from '@services/Setup';
-import { Keyboard, KeyboardAvoidingView, Modal, Platform, Switch, TouchableWithoutFeedback } from 'react-native';
+import { Entypo } from '@expo/vector-icons';
+
+import * as Notifications from 'expo-notifications';
+import * as Yup from 'yup';
+
+import {
+  ButtonAbout, 
+  Container, 
+  ContainerFooter, 
+  ContainerForm, 
+  SaveButton, 
+  SwitchWrapper, 
+  TextAbout, 
+  TextSwitch, 
+  Title 
+} from './styles';
+import { About } from '@components/About';
 import { InputField } from '@components/InputField';
 import { Loading } from '@components/Loading';
 import { WarningModal } from '@components/WarningModal';
-import { About } from '@components/About';
+
+import { ScheduleNotifications, VerifyNotifications } from '@services/Setup';
+import { appDataStore, SettingsProps } from '@services/store';
 
 const { ASYNC_KEY } = process.env;
 
@@ -20,7 +41,6 @@ type WarningProps = {
   height: number;
   color: string;
 }
-
 
 export function Settings() {
   const [name, setName] = useState('');
@@ -63,14 +83,15 @@ export function Settings() {
       if (name !== '') await schema.name.validate({ name });
       setDataStorage({
         name,
-        email,
-        notification
+        email: startSettings.email,
+        notification: startSettings.notification,
       });
       setWarning({
         height: 170,
         message: 'Nome alterado com sucesso!',
         color: colors.error
       });
+      setVisible(true);
     } catch (error) {
       if (error instanceof Yup.ValidationError) {
         setNameError(error.message);
@@ -92,9 +113,9 @@ export function Settings() {
     try {
       if (email !== '') await schema.email.validate({ email });
       setDataStorage({
-        name,
+        name: startSettings.name,
         email,
-        notification
+        notification: startSettings.notification,
       });
       setWarning({
         height: 170,
@@ -132,14 +153,16 @@ export function Settings() {
               message: 'As notificações foram ativadas, agora você será alertado antes do programa começar!',
               color: colors.error
             });
+            setVisible(true);
           } else {
             setWarning({
               height: 200,
               message: 'Não foi possível ativar as notificações, tente novamente mais tarde!',
               color: colors.error
             });
+            setVisible(true);
+            return;
           }
-          setVisible(true);
         } else {
           setWarning({
             height: 200,
@@ -147,6 +170,7 @@ export function Settings() {
             color: colors.error
           });
           setVisible(true);
+          return;
         }
       } else {
         await Notifications.cancelAllScheduledNotificationsAsync();
@@ -159,8 +183,8 @@ export function Settings() {
       }
       setNotification(isNotification);
       setDataStorage({
-        name,
-        email,
+        name: startSettings.name,
+        email: startSettings.email,
         notification: isNotification
       });
     } catch (error) {
@@ -174,12 +198,14 @@ export function Settings() {
     }
   }
 
-  useEffect(() => {
+  useFocusEffect(useCallback(() => {
     setName(startSettings.name);
     setEmail(startSettings.email);
     const isBoolean = typeof startSettings.notification === 'boolean';
     setNotification(isBoolean ? startSettings.notification : false);
-  }, [])
+    setEmailError(undefined);
+    setNameError(undefined);
+  },[startSettings]));
 
   return (
     <KeyboardAvoidingView
@@ -265,6 +291,7 @@ export function Settings() {
                 }}
                 style={{ transform: [{ scaleX: 1.3 }, { scaleY: 1.3 }] }}
                 ios_backgroundColor={colors.background}
+                onValueChange={handleChangedNotification}
                 thumbColor={colors.text_light}
                 value={notification}
               />
@@ -285,7 +312,7 @@ export function Settings() {
             onRequestClose={() => setVisible(false)}
             hardwareAccelerated={true}
           >
-            <WarningModal 
+            <WarningModal
               title='Aviso'
               height={warning.height}
               message={warning.message}
@@ -299,7 +326,7 @@ export function Settings() {
             visible={visibleAbout}
             onRequestClose={() => setVisibleAbout(false)}
           >
-            <About 
+            <About
               closeModal={() => setVisibleAbout(false)}
             />
           </Modal>

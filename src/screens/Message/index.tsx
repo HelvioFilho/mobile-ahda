@@ -1,21 +1,40 @@
-import { yupResolver } from '@hookform/resolvers/yup';
+import { useCallback, useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  ScrollView,
+  TouchableWithoutFeedback
+} from 'react-native';
+import { useTheme } from 'styled-components/native';
+
+import * as Yup from 'yup';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+
 import { api } from '@services/api';
 import { appDataStore } from '@services/store';
-import { useCallback, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { Keyboard, KeyboardAvoidingView, Modal, Platform, ScrollView, TouchableWithoutFeedback } from 'react-native';
-import { useTheme } from 'styled-components/native';
-import * as Yup from 'yup';
+
+import {
+  AngelHalo,
+  ButtonText,
+  Container,
+  ContainerButton,
+  ContainerForm,
+  ContainerImage,
+  MessageImage,
+  SubTitle,
+  Title
+} from './styles';
+import { InputMessage } from '@components/InputMessage';
+import { Loading } from '@components/Loading';
+import { WarningModal } from '@components/WarningModal';
 
 import AngelHaloImage from '@assets/angelHalo.png';
 import SendLeft from '@assets/send-left.png';
 import SendRight from '@assets/send-right.png';
-
-import { AngelHalo, ButtonText, Container, ContainerButton, ContainerForm, ContainerImage, MessageImage, SubTitle, Title } from './styles';
-import { InputMessage } from '@components/InputMessage';
-import { Loading } from '@components/Loading';
-import { WarningModal } from '@components/WarningModal';
 
 const { KEY } = process.env;
 
@@ -30,7 +49,6 @@ type DataForm = {
   email: string;
   message: string;
 }
-
 
 export function Message() {
   const [inputHeight, setInputHeight] = useState(50);
@@ -87,7 +105,9 @@ export function Message() {
           }
         } else {
           message = 'Sua mensagem foi enviada com sucesso!';
-          reset();
+          reset({
+            message: '',
+          });
         }
         setWarning({
           height,
@@ -123,76 +143,76 @@ export function Message() {
         <ScrollView
           showsVerticalScrollIndicator={false}
         >
-        <Container>
-          <ContainerImage>
-          <MessageImage
-            source={SendRight}
-          />
-          <AngelHalo 
-            source={AngelHaloImage}
-          />
-          <MessageImage 
-            source={SendLeft}
-          />
-          </ContainerImage>
-          <Title>Nos envie{'\n'}uma mensagem!</Title>
-          <SubTitle>
-            Suas mensagens podem ser lidas no programa, esse é seu contato direto com A hora do anjo, então nos escreva!
-          </SubTitle>
-          <ContainerForm>
-            <InputMessage 
-              placeholder='Nome'
-              label='Nome'
-              name='name'
-              control={control}
-              autoCorrect={false}
-              error={errors.name && errors.name.message as string}
-            />
-            <InputMessage 
-              placeholder='E-mail'
-              label='E-mail (Opcional)'
-              name='email'
-              control={control}
-              autoCapitalize='none'
-              keyboardType='email-address'
-              error={errors.email && errors.email.message as string}
-            />
-            <InputMessage 
-              placeholder='Sua mensagem'
-              label='Mensagem'
-              name='message'
-              control={control}
-              changeHeight={inputHeight}
-              error={errors.message && errors.message.message as string}
-              multiline={true}
-              onContentSizeChange={(e) => setInputHeight(e.nativeEvent.contentSize.height + 30)}
-            />
-            <ContainerButton
-              disabled={isSubmitting}
-              onPress={handleSubmit(handleSendMessage)}
+          <Container>
+            <ContainerImage>
+              <MessageImage
+                source={SendRight}
+              />
+              <AngelHalo
+                source={AngelHaloImage}
+              />
+              <MessageImage
+                source={SendLeft}
+              />
+            </ContainerImage>
+            <Title>Nos envie{'\n'}uma mensagem!</Title>
+            <SubTitle>
+              Suas mensagens podem ser lidas no programa, esse é seu contato direto com A hora do anjo, então nos escreva!
+            </SubTitle>
+            <ContainerForm>
+              <InputMessage
+                placeholder='Nome'
+                label='Nome'
+                name='name'
+                control={control}
+                autoCorrect={false}
+                error={errors.name && errors.name.message as string}
+              />
+              <InputMessage
+                placeholder='E-mail'
+                label='E-mail (Opcional)'
+                name='email'
+                control={control}
+                autoCapitalize='none'
+                keyboardType='email-address'
+                error={errors.email && errors.email.message as string}
+              />
+              <InputMessage
+                placeholder='Sua mensagem'
+                label='Mensagem'
+                name='message'
+                control={control}
+                changeHeight={inputHeight}
+                error={errors.message && errors.message.message as string}
+                multiline={true}
+                onContentSizeChange={(e) => setInputHeight(e.nativeEvent.contentSize.height + 30)}
+              />
+              <ContainerButton
+                disabled={isSubmitting}
+                onPress={handleSubmit(handleSendMessage)}
+              >
+                {
+                  isSubmitting ?
+                    <Loading size={24} player={true} /> :
+                    <ButtonText>Enviar</ButtonText>
+                }
+              </ContainerButton>
+            </ContainerForm>
+            <Modal
+              animationType='fade'
+              transparent
+              visible={visible}
+              onRequestClose={() => setVisible(false)}
             >
-              {
-                isSubmitting ?
-                <Loading size={24} player={true} /> :
-                <ButtonText>Enviar</ButtonText>
-              }
-            </ContainerButton>
-          </ContainerForm>
-          <Modal
-            animationType='fade'
-            transparent
-            visible={visible}
-            onRequestClose={() => setVisible(false)}
-          >
-            <WarningModal 
-              title='Aviso'
-              height={warning.height}
-              message={warning.message}
-              colorButton={warning.color}
-              closeModal={() => setVisible(false)}
-            />
-          </Modal>
-        </Container>
+              <WarningModal
+                title='Aviso'
+                height={warning.height}
+                message={warning.message}
+                colorButton={warning.color}
+                closeModal={() => setVisible(false)}
+              />
+            </Modal>
+          </Container>
         </ScrollView>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
