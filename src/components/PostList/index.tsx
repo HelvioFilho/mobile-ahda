@@ -1,15 +1,17 @@
-import { 
-  Container, 
-  ContainerUser, 
-  Cover, 
-  Date, 
-  Preview, 
-  Separator, 
-  Title, 
-  User, 
-  WithoutUser 
+import { useNavigation } from '@react-navigation/native';
+import {
+  Container,
+  ContainerUser,
+  Cover,
+  Date,
+  Preview,
+  Separator,
+  Title,
+  User,
+  WithoutUser
 } from './styles';
 import { PostProps } from '@screens/Home';
+import { appDataStore } from '@services/store';
 
 type PostListProps = {
   data: PostProps;
@@ -17,11 +19,19 @@ type PostListProps = {
 
 export function PostList({ data }: PostListProps) {
   const date = data.date_post.split(' ');
+  const { navigate } = useNavigation();
+  const { setPost } = appDataStore();
+  
+  function handleSetPost() {
+    setPost(data);
+    navigate('Post');
+  }
+
 
   return (
     <Container
       activeOpacity={0.9}
-      onPress={() => { }}
+      onPress={handleSetPost}
     >
       <Title>{data.title}</Title>
       <Cover
