@@ -23,12 +23,15 @@ export function PlayButton() {
 
   async function togglePlayback(playbackState: State) {
     const currentTrack = await TrackPlayer.getCurrentTrack();
-
     if (currentTrack !== null) {
       setLoading(true);
-      if (playbackState === State.Paused ||
-        playbackState === State.Ready
-      ) {
+      if (playbackState === State.Connecting ||
+        playbackState === State.None) {
+        setVisible(true);
+        setLoading(false);
+        return;
+      }
+      if (playbackState === State.Ready) {
         try {
           await TrackPlayer.play();
         } catch (e) {
@@ -46,9 +49,13 @@ export function PlayButton() {
   }
 
   useEffect(() => {
+    animationPlayStop.current.play(0, 24);
+  }, []);
+
+  useEffect(() => {
     if (playbackState === State.Playing) {
       animationPlayStop.current.play(24, 0);
-    } else {
+    } else if (playbackState === State.Paused) {
       animationPlayStop.current.play(0, 24);
     }
   }, [playbackState]);
@@ -88,7 +95,7 @@ export function PlayButton() {
         <WarningModal
           title='Aviso'
           height={220}
-          message={"A rádio encontra-se, momentaneamente, fora do ar. \nSentimos muito pelo inconveniente, em breve tudo voltará ao normal!"}
+          message={"A rádio encontra-se, momentaneamente, fora do ar. \nSentimos muito pelo inconveniente, tente novamente mais tarde!"}
           colorButton={colors.error}
           closeModal={() => setVisible(false)}
         />

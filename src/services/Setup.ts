@@ -13,8 +13,10 @@ type StartSettingsProps = {
 }
 
 async function addPlayer() {
+  const url = 'https://s18.maxcast.com.br:8707/live';
+  
   await TrackPlayer.add({
-    url: 'https://s18.maxcast.com.br:8707/live',
+    url,
     artwork: require('@assets/angel-blue.png'),
     title: 'Rádio A Hora do Anjo',
     artist: 'De segunda a sexta de 18h às 19h',
