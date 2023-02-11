@@ -30,6 +30,7 @@ import { getTagStyle } from '@utils/tagStyle';
 import { ImageGallery } from '@components/ImageGallery';
 
 import { appDataStore } from '@services/store';
+import FastImage from 'react-native-fast-image';
 
 const { KEY } = process.env;
 
@@ -90,7 +91,7 @@ export function Post() {
           <Cover 
             height={maxHeight}
             source={{ uri: data.cover }}
-            resizeMode='stretch'
+            resizeMode={FastImage.resizeMode.stretch}
           />
         </CoverWrapper>
         <Container>
