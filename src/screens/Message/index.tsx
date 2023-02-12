@@ -106,6 +106,8 @@ export function Message() {
         } else {
           message = 'Sua mensagem foi enviada com sucesso!';
           reset({
+            name: form.name,
+            email: form.email ? form.email : '',
             message: '',
           });
         }
