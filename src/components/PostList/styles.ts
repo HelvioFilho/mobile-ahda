@@ -18,9 +18,14 @@ export const Title = styled.Text`
   margin-bottom: 8px;
 `;
 
-export const Cover = styled(FastImage)`
+export const CoverWrapper = styled.View`
   width: 100%;
   height: 250px;
+`;
+
+export const Cover = styled(FastImage)`
+  width: 100%;
+  height: 100%;
 `;
 
 export const Preview = styled.Text`

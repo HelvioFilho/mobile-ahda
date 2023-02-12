@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Dimensions, Image, ViewToken, FlatList } from 'react-native';
-import { Container, ImageIndex, ImageWrapper, PostImage } from './styles';
+import { Container, ImageIndex, ImageWrapper } from './styles';
 import { Bullet } from '@components/Bullet';
+import { PostImage } from '@components/PostImage';
 
 type ImageGalleryProps = {
   images: {
@@ -66,10 +67,7 @@ export function ImageGallery({ images }: ImageGalleryProps) {
             height={maxHeight}
             width={displayWidth}
           >
-            <PostImage 
-              source={{ uri: item.path }}
-              resizeMode='contain'
-            />
+            <PostImage path={item.path} />
           </ImageWrapper>
         )}
         pagingEnabled

@@ -31,6 +31,7 @@ import { ImageGallery } from '@components/ImageGallery';
 
 import { appDataStore } from '@services/store';
 import FastImage from 'react-native-fast-image';
+import { Loading } from '@components/Loading';
 
 const { KEY } = process.env;
 
@@ -41,8 +42,9 @@ type GalleryProps = {
 
 export function Post() {
   const [imageGallery, setImageGallery] = useState<GalleryProps[]>([]);
-  const [maxHeight, setMaxHeight] = useState(0);
+  const [maxHeight, setMaxHeight] = useState(250);
   const [text, setText] = useState('');
+  const [loading, setLoading] = useState(true);
 
   const { width: displayWidth } = Dimensions.get('window');
   const { colors } = useTheme();
@@ -87,11 +89,15 @@ export function Post() {
   return (
     <>
       <ScrollView style={{ flex: 1, backgroundColor: colors.light }}>
-        <CoverWrapper width={displayWidth} >
+        <CoverWrapper 
+          width={displayWidth} 
+          height={maxHeight}
+        >
+          { loading && <Loading style={{marginBottom: maxHeight/2.5}} size={32} />}
           <Cover 
-            height={maxHeight}
             source={{ uri: data.cover }}
             resizeMode={FastImage.resizeMode.stretch}
+            onLoadEnd={() => setLoading(false)}
           />
         </CoverWrapper>
         <Container>

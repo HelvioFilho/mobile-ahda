@@ -3,6 +3,7 @@ import {
   Container,
   ContainerUser,
   Cover,
+  CoverWrapper,
   Date,
   Preview,
   Separator,
@@ -10,23 +11,26 @@ import {
   User,
   WithoutUser
 } from './styles';
+import FastImage from 'react-native-fast-image';
 import { PostProps } from '@screens/Home';
 import { appDataStore } from '@services/store';
+import { useState } from 'react';
+import { Loading } from '@components/Loading';
 
 type PostListProps = {
   data: PostProps;
 }
 
 export function PostList({ data }: PostListProps) {
+  const [loading, setLoading] = useState(true);
   const date = data.date_post.split(' ');
   const { navigate } = useNavigation();
   const { setPost } = appDataStore();
-  
+
   function handleSetPost() {
     setPost(data);
     navigate('Post');
   }
-
 
   return (
     <Container
@@ -34,10 +38,15 @@ export function PostList({ data }: PostListProps) {
       onPress={handleSetPost}
     >
       <Title>{data.title}</Title>
-      <Cover
-        source={{ uri: data.cover }}
-        resizeMode='stretch'
-      />
+      <CoverWrapper>
+        { loading && <Loading size={32} /> }
+          <Cover
+            source={{ uri: data.cover }}
+            resizeMode={FastImage.resizeMode.stretch}
+            onLoadEnd={() => setLoading(false)}
+          />
+        
+      </CoverWrapper>
       {
         data.user.name
           ?

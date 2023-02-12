@@ -1,5 +1,4 @@
 import styled, { css } from 'styled-components/native';
-import FastImage from 'react-native-fast-image';
 import { RFValue } from 'react-native-responsive-fontsize';
 
 type PostImageProps = {
@@ -21,11 +20,6 @@ export const ImageWrapper = styled.View<PostImageProps>`
     width: ${width}px;
     height: ${RFValue(height)}px;
   `}
-`;
-
-export const PostImage = styled(FastImage)`
-  width: 100%;
-  height: 100%;
 `;
 
 export const ImageIndex = styled.View`

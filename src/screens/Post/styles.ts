@@ -2,12 +2,12 @@ import styled, { css } from 'styled-components/native';
 import FastImage from 'react-native-fast-image';
 import { RFValue } from 'react-native-responsive-fontsize';
 
-type CoverProps = {
-  height: number;
-}
+// type CoverProps = {
+// }
 
 type CoverWrapperProps = {
   width: number;
+  height: number;
 }
 
 export const Container = styled.View`
@@ -29,13 +29,14 @@ export const Title = styled.Text`
 
 export const CoverWrapper = styled.View<CoverWrapperProps>`
   width: ${({ width }) => width}px;
+  height: ${({ height }) => RFValue(height)}px;
   justify-content: center;
   align-items: center;
 `;
 
-export const Cover = styled(FastImage) <CoverProps>`
+export const Cover = styled(FastImage)`
   width: 100%;
-  height: ${({ height }) => RFValue(height)}px;
+  height: 100%;
 `;
 
 export const ContainerRender = styled.View`
