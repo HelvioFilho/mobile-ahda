@@ -19,7 +19,7 @@ type ChangeImageProps = {
 export function ImageGallery({ images }: ImageGalleryProps) {
   const [imageIndex, setImageIndex] = useState(0);
   const [value, setValue] = useState<number[]>([]);
-  const [maxHeight, setMaxHeight] = useState(0);
+  const [maxHeight, setMaxHeight] = useState(250);
   const [checkHeight, setCheckHeight] = useState(false);
 
   const { width: displayWidth } = Dimensions.get('window');
