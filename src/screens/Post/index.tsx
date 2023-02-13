@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { Dimensions, Image, ScrollView } from 'react-native';
-import { 
-  About, 
-  AboutWrapper, 
-  Avatar, 
-  BackButton, 
-  Container, 
-  ContainerAvatar, 
-  ContainerGallery, 
-  ContainerRender, 
-  Cover, 
-  CoverWrapper, 
-  Footer, 
-  Name, 
-  Published, 
-  Title, 
-  TitleGallery 
+import {
+  About,
+  AboutWrapper,
+  Avatar,
+  BackButton,
+  Container,
+  ContainerAvatar,
+  ContainerGallery,
+  ContainerRender,
+  Cover,
+  CoverWrapper,
+  Footer,
+  Name,
+  Published,
+  Title,
+  TitleGallery
 } from './styles';
 import { MaterialIcons } from '@expo/vector-icons';
 import RenderHTML from 'react-native-render-html';
@@ -89,12 +89,23 @@ export function Post() {
   return (
     <>
       <ScrollView style={{ flex: 1, backgroundColor: colors.light }}>
-        <CoverWrapper 
-          width={displayWidth} 
+        <CoverWrapper
+          width={displayWidth}
           height={maxHeight}
         >
-          { loading && <Loading style={{marginBottom: maxHeight/2.5}} size={32} />}
-          <Cover 
+          {
+            loading &&
+            <Loading
+              style={{
+                position: 'absolute',
+                top: maxHeight / 2.8,
+                elevation: 999,
+                zIndex: 999
+              }}
+              size={32}
+            />
+          }
+          <Cover
             source={{ uri: data.cover }}
             resizeMode={FastImage.resizeMode.stretch}
             onLoadEnd={() => setLoading(false)}
@@ -103,7 +114,7 @@ export function Post() {
         <Container>
           <Title>{data.title}</Title>
           <ContainerRender>
-            <RenderHTML 
+            <RenderHTML
               contentWidth={displayWidth}
               source={{ html: text }}
               tagsStyles={tagsStyles}
@@ -113,7 +124,7 @@ export function Post() {
             imageGallery.length > 0 &&
             <ContainerGallery>
               <TitleGallery>Galeria de Imagens</TitleGallery>
-              <ImageGallery 
+              <ImageGallery
                 images={imageGallery}
               />
             </ContainerGallery>
@@ -123,7 +134,7 @@ export function Post() {
             data.user.name &&
             <Footer>
               <ContainerAvatar>
-                <Avatar 
+                <Avatar
                   source={{ uri: data.user.image }}
                 />
                 <Name>{data.user.name}</Name>
@@ -138,11 +149,11 @@ export function Post() {
           }
         </Container>
       </ScrollView>
-      <BackButton 
+      <BackButton
         activeOpacity={0.8}
         onPress={goBack}
       >
-        <MaterialIcons 
+        <MaterialIcons
           name='keyboard-arrow-left'
           size={20}
           color={colors.light}

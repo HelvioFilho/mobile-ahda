@@ -39,13 +39,24 @@ export function PostList({ data }: PostListProps) {
     >
       <Title>{data.title}</Title>
       <CoverWrapper>
-        { loading && <Loading size={32} /> }
-          <Cover
-            source={{ uri: data.cover }}
-            resizeMode={FastImage.resizeMode.stretch}
-            onLoadEnd={() => setLoading(false)}
+        {
+          loading &&
+          <Loading
+            style={{
+              position: 'absolute',
+              top: 250 / 2.5,
+              elevation: 999,
+              zIndex: 999
+            }}
+            size={32}
           />
-        
+        }
+        <Cover
+          source={{ uri: data.cover }}
+          resizeMode={FastImage.resizeMode.stretch}
+          onLoadEnd={() => setLoading(false)}
+        />
+
       </CoverWrapper>
       {
         data.user.name

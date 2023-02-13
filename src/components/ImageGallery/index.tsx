@@ -30,25 +30,25 @@ export function ImageGallery({ images }: ImageGalleryProps) {
   });
 
   async function checkMaxHeight() {
-    try{
+    try {
       await images.map(
         (item) => {
           Image.getSize(item.path, (width, height) => {
             setValue(oldValue => [...oldValue, ((displayWidth - 40) * height) / width]);
           });
         });
-        if(value.length > 0){
-          setMaxHeight(Math.max(...value));
-        }else {
-          setCheckHeight(!checkHeight);
-        }
-    }catch(error){
+      if (value.length > 0) {
+        setMaxHeight(Math.max(...value));
+      } else {
+        setCheckHeight(!checkHeight);
+      }
+    } catch (error) {
       console.log(error);
     }
   }
 
   useEffect(() => {
-    if(maxHeight === 0){
+    if (maxHeight === 0) {
       checkMaxHeight();
     }
   }, [value]);
@@ -59,7 +59,7 @@ export function ImageGallery({ images }: ImageGalleryProps) {
 
   return (
     <Container>
-      <FlatList 
+      <FlatList
         data={images}
         keyExtractor={item => item.id}
         renderItem={({ item }) => (
@@ -67,7 +67,10 @@ export function ImageGallery({ images }: ImageGalleryProps) {
             height={maxHeight}
             width={displayWidth}
           >
-            <PostImage path={item.path} />
+            <PostImage
+              path={item.path}
+              height={maxHeight}
+            />
           </ImageWrapper>
         )}
         pagingEnabled
@@ -78,7 +81,7 @@ export function ImageGallery({ images }: ImageGalleryProps) {
       <ImageIndex>
         {
           images.map((_, index) => (
-            <Bullet 
+            <Bullet
               key={String(index)}
               active={index === imageIndex}
             />

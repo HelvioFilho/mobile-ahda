@@ -19,6 +19,8 @@ export const Title = styled.Text`
 `;
 
 export const CoverWrapper = styled.View`
+  position: relative;
+  align-items: center;
   width: 100%;
   height: 250px;
 `;

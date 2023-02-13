@@ -11,6 +11,7 @@ export const Container = styled.View`
 `;
 
 export const ImageWrapper = styled.View<PostImageProps>`
+  position: relative;
   justify-content: center;
   align-items: center;
   padding: 0 10px;

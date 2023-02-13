@@ -5,14 +5,26 @@ import { Cover } from './styles';
 
 type PostImageProps = {
   path: string;
+  height: number;
 }
 
-export function PostImage({ path }: PostImageProps) {
+export function PostImage({ path, height }: PostImageProps) {
   const [loading, setLoading] = useState(true);
 
   return (
     <>
-      {loading && <Loading size={32} />}
+      {
+        loading &&
+        <Loading
+        style={{
+          position: 'absolute',
+          top: height / 2,
+          elevation: 999,
+          zIndex: 999
+        }}
+          size={32}
+        />
+      }
       <Cover
         source={{ uri: path }}
         resizeMode={FastImage.resizeMode.contain}

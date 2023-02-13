@@ -28,6 +28,7 @@ export const Title = styled.Text`
 `;
 
 export const CoverWrapper = styled.View<CoverWrapperProps>`
+  position: relative;
   width: ${({ width }) => width}px;
   height: ${({ height }) => RFValue(height)}px;
   justify-content: center;
