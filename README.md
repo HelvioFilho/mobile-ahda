@@ -32,6 +32,7 @@ This project was developed using the following technologies:
 - [React Native](https://reactnative.dev/)
 - [Expo bare workflow](https://expo.io/)
 - [TypeScript](https://www.typescriptlang.org/)
+- [TanStack Query](https://tanstack.com/query/latest)
 
 ## Getting started
 
@@ -63,6 +64,6 @@ Radio application A hora do Anjo, a radio station created in Novo Repartimento, 
 
 Download the application from the play store.
 
-<a href="">
+<a href="https://play.google.com/store/apps/details?id=com.ahda">
   <img alt="application link in play store" title="play store" src=".github/googlePlay.svg" />
 </a>
