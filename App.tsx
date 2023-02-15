@@ -10,10 +10,18 @@ import {
 } from '@expo-google-fonts/roboto';
 import { useNetInfo } from '@react-native-community/netinfo';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import * as SplashScreen from 'expo-splash-screen';
+
 import { Loading } from '@components/Loading';
 import { Offline } from '@screens/Offline';
 import { LoadingScreen } from '@screens/LoadingScreen';
-import { CheckActiveNotifications, SetupNotifications, SetupStartSettings, SetupTrackPlayer } from './src/services/Setup';
+
+import { 
+  CheckActiveNotifications, 
+  SetupNotifications, 
+  SetupStartSettings, 
+  SetupTrackPlayer 
+} from './src/services/Setup';
 import { appDataStore } from '@services/store';
 import { Routes } from '@routes/index';
 
@@ -25,15 +33,19 @@ export default function App() {
   const [notification, setNotification] = useState(false);
   const { setBible, setStartSettings } = appDataStore();
 
-  const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_500Medium, Roboto_700Bold });
+  const [fontsLoaded] = useFonts({ 
+    Roboto_400Regular, 
+    Roboto_500Medium, 
+    Roboto_700Bold 
+  });
   const netInfo = useNetInfo();
 
   async function getSetup() {
     const isSettings = await SetupStartSettings();
     const isPlayer = await SetupTrackPlayer();
     const isNotification = await SetupNotifications();
-    if(isSettings){
-      if(isSettings.settings.notification){
+    if (isSettings) {
+      if (isSettings.settings.notification) {
         await CheckActiveNotifications();
       }
     }
@@ -42,8 +54,12 @@ export default function App() {
     setStartSettings(isSettings.settings);
     setPlayer(isPlayer);
     setNotification(isNotification);
+    SplashScreen.preventAutoHideAsync();
+    setTimeout(() => {
+      SplashScreen.hideAsync();
+    }, 2000);
   }
-
+  
   useEffect(() => {
     if (!player && !notification) {
       getSetup();
@@ -55,7 +71,7 @@ export default function App() {
       <ThemeProvider theme={theme}>
         {
           <LoadingScreen
-            onFinished={() => setSplash(false)}
+            onFinished={async () => setSplash(false)}
           />
         }
       </ThemeProvider>

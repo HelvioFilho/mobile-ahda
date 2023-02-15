@@ -13,14 +13,14 @@ type StartSettingsProps = {
 }
 
 async function addPlayer() {
-  const url = 'https://s18.maxcast.com.br:8707/live';
-  
-  await TrackPlayer.add({
-    url,
+  const data = {
+    url: 'https://s18.maxcast.com.br:8707/live',
     artwork: require('@assets/angel-blue.png'),
     title: 'Rádio A Hora do Anjo',
     artist: 'De segunda a sexta de 18h às 19h',
-  });
+  }
+  await TrackPlayer.add(data);
+  await TrackPlayer.updateNowPlayingMetadata(data);
 }
 
 async function removePlayer() {

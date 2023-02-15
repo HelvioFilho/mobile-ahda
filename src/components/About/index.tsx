@@ -43,17 +43,17 @@ export function About({ closeModal }: AboutProps) {
           </Wrapper>
           <Wrapper>
             <Label>Versão:</Label>
-            <Content>1.0.0</Content>
+            <Content>1.1.0</Content>
           </Wrapper>
           <Wrapper>
             <Label>Desenvolvido por:</Label>
             <Content>Hélvio Filho</Content>
           </Wrapper>
           <Site
-            onPress={() => Linking.openURL('https://www.hsfv.com.br')}
+            onPress={() => Linking.openURL('https://www.hsvf.com.br')}
             activeOpacity={0.8}
           >
-            <TextSite>www.hsfv.com.br</TextSite>
+            <TextSite>www.hsvf.com.br</TextSite>
           </Site>
         </Body>
       </ContainerModal>
