@@ -22,6 +22,7 @@ export type PostProps = {
     image: string;
     about: string;
   }
+  youtube: string;
   cover: string;
   date_post: string;
 };
