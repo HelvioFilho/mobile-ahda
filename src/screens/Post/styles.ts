@@ -2,8 +2,7 @@ import styled, { css } from 'styled-components/native';
 import FastImage from 'react-native-fast-image';
 import { RFValue } from 'react-native-responsive-fontsize';
 
-// type CoverProps = {
-// }
+export const video_height = 230;
 
 type CoverWrapperProps = {
   width: number;
@@ -43,6 +42,10 @@ export const Cover = styled(FastImage)`
 export const ContainerRender = styled.View`
   padding: 30px 0 0;
   margin-bottom: 20px;
+`;
+export const ContainerYoutube = styled.View`
+  height: ${video_height}px;
+  margin-bottom: 10px;
 `;
 
 export const ContainerGallery = styled.View`

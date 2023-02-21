@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Dimensions, Image, ScrollView } from 'react-native';
 import {
   About,
@@ -9,16 +9,20 @@ import {
   ContainerAvatar,
   ContainerGallery,
   ContainerRender,
+  ContainerYoutube,
   Cover,
   CoverWrapper,
   Footer,
   Name,
   Published,
   Title,
-  TitleGallery
+  TitleGallery,
+  video_height,
 } from './styles';
 import { MaterialIcons } from '@expo/vector-icons';
 import RenderHTML from 'react-native-render-html';
+import YoutubePlayer from 'react-native-youtube-iframe';
+import * as ScreenOrientation from 'expo-screen-orientation';
 
 import { useTheme } from 'styled-components/native';
 import { useNavigation } from '@react-navigation/native';
@@ -45,6 +49,7 @@ export function Post() {
   const [maxHeight, setMaxHeight] = useState(250);
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(true);
+  const [youtubeLoading, setYoutubeLoading] = useState(true);
 
   const { width: displayWidth } = Dimensions.get('window');
   const { colors } = useTheme();
@@ -79,6 +84,15 @@ export function Post() {
       setMaxHeight((displayWidth * height) / width);
     });
   }
+
+  const onFullScreenChange = useCallback((isFullScreen: boolean) => {
+    if (isFullScreen) {
+      ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
+    } else {
+      ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
+    }
+
+  }, []);
 
   useEffect(() => {
     getImageGallery(data.id);
@@ -120,6 +134,29 @@ export function Post() {
               tagsStyles={tagsStyles}
             />
           </ContainerRender>
+          {
+            !!data.youtube &&
+            <ContainerYoutube
+            >
+              <YoutubePlayer
+                videoId={data.youtube}
+                height={youtubeLoading ? 0 : video_height}
+                onReady={() => setYoutubeLoading(false)}
+                onFullScreenChange={onFullScreenChange}
+              />
+              {
+                youtubeLoading &&
+                <Loading
+                  style={{
+                    marginTop: video_height / 3,
+                    alignSelf: 'center',
+                  }}
+                  size={32}
+                />
+
+              }
+            </ContainerYoutube>
+          }
           {
             imageGallery.length > 0 &&
             <ContainerGallery>
