@@ -6,5 +6,6 @@ export async function playbackService(){
   });
   TrackPlayer.addEventListener(Event.RemotePause, () => {
     TrackPlayer.pause();
+    TrackPlayer.reset();
   });
 }
